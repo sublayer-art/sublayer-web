@@ -1,0 +1,32 @@
+/* latin */
+@font-face {
+  font-family: "Quantico";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/Quantico-Italic.ttf) format("woff2");
+}
+/* latin */
+@font-face {
+  font-family: "Quantico";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(../fonts/Quantico-BoldItalic.ttf) format("woff2");
+}
+/* latin */
+@font-face {
+  font-family: "Quantico";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/Quantico-Regular.ttf) format("woff2");
+}
+/* latin */
+@font-face {
+  font-family: "Quantico";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(../fonts/Quantico-Bold.ttf) format("woff2");
+}

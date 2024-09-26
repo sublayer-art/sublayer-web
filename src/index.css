@@ -1,0 +1,27 @@
+@import url(./assets/styles/fonts.css);
+
+:root {
+  font-family: "Quantico", sans-serif;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.scroll {
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* 对于Firefox */
+  -ms-overflow-style: none; /* 对于IE和Edge */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* 对于Chrome, Safari和Opera */
+}
+
+img {
+  object-fit: cover;
+}
