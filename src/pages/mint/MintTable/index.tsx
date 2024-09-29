@@ -1,7 +1,6 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Box,
-  Button,
   CircularProgress,
   LinearProgress,
   Stack,
@@ -24,70 +23,11 @@ import { useAccount, useWriteContract } from "wagmi";
 import DAPPService from "@/services/dapp";
 import NFTAbi from "@/contract/abis/NFT.json";
 import NFTService from "@/services/nft";
+import { LoadingButton } from "@mui/lab";
 
 const MintTable: React.FC = () => {
-  const { data, loading, refresh } = useRequest(ContractService.listAll);
+  const { data, loading } = useRequest(ContractService.listAll);
   const { records = [] } = data || {};
-
-  const { address } = useAccount();
-  const { writeContract } = useWriteContract();
-
-  const handleMint = useCallback(
-    async (contract: ContractDTO) => {
-      if (!address) return;
-      const { tokenId, r, s, v } = await DAPPService.signMessage(
-        contract.address
-      );
-
-      writeContract(
-        {
-          abi: NFTAbi,
-          address: contract.address,
-          functionName: "mint",
-          args: [
-            tokenId,
-            v,
-            r,
-            s,
-            [],
-            "/ipfs/bafkreiggk6hokdb7iyqvjqerthnimh2tmkdl2xfjxcjei2dl2ku2ouh7fe",
-          ],
-        },
-        {
-          onSettled(data, error, variables, context) {
-            console.log({ data, error, variables, context });
-          },
-          onSuccess(data) {
-            NFTService.add({
-              contractId: contract.id,
-              address: contract.address,
-              categoryId: 0,
-              imgUrl: "abc",
-              storageId: 1,
-              tokenId,
-              locked: true,
-              lockedContent: "",
-              name: contract.name,
-              description: contract.description,
-              royalties: "",
-              properties: "",
-              nftVerify: 0,
-              isSync: true,
-              creator: address,
-              txHash: data,
-              animUrl: "",
-              animStorageId: 0,
-              metadataUrl: "",
-              metadataContent: "",
-              getMetaTimes: 0,
-              // address: contract.address,
-            } as any);
-          },
-        }
-      );
-    },
-    [writeContract, address]
-  );
 
   return (
     <TableContainer>
@@ -123,65 +63,7 @@ const MintTable: React.FC = () => {
         </TableHead>
         <TableBody>
           {records.map((row, index) => {
-            return (
-              <TableRow hover key={index}>
-                <TableCell>
-                  <Stack direction="row">
-                    <StarOutlineRoundedIcon name="star" />
-                    <Typography ml={0.5}>{index + 1}</Typography>
-                  </Stack>
-                </TableCell>
-                <TableCell>
-                  {(index + 1) % 2 === 0 && (
-                    <LocalFireDepartmentIcon sx={{ color: "primary.main" }} />
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Stack direction="row" alignItems="center">
-                    <Typography ml={2}>{row.name}</Typography>
-                  </Stack>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography color="primary.main">
-                    {new Date(row.createTime).toLocaleDateString()}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Stack width={120} mx="auto">
-                    <Box sx={{ width: "100%", mr: 1, position: "relative" }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={10}
-                        sx={{ height: 18 }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          lineHeight: "18px",
-                          width: "100%",
-                          color: "primary.contrastText",
-                        }}
-                      >
-                        {Math.round(10) / 100}%
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </TableCell>
-                <TableCell align="center">0 ETH</TableCell>
-                <TableCell align="center">
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleMint(row)}
-                  >
-                    Mint
-                  </Button>
-                </TableCell>
-              </TableRow>
-            );
+            return <ITableRow data={row} key={index} />;
           })}
         </TableBody>
       </Table>
@@ -199,3 +81,123 @@ const MintTable: React.FC = () => {
   );
 };
 export default MintTable;
+
+function ITableRow({
+  data,
+  hot = false,
+}: {
+  data: ContractDTO;
+  hot?: boolean;
+}) {
+  const { address } = useAccount();
+  const { writeContract } = useWriteContract();
+  const [minting, setMinting] = useState(false);
+  const handleMint = useCallback(
+    async (contract: ContractDTO) => {
+      if (!address) return;
+      setMinting(true);
+      try {
+        const { tokenId, r, s, v } = await DAPPService.signMessage(
+          contract.address
+        );
+        await NFTService.add({
+          contractId: contract.id,
+          address: contract.address,
+          categoryId: 0,
+          imgUrl: contract.cover,
+          storageId: contract.storageId,
+          tokenId,
+          locked: true,
+          lockedContent: "",
+          name: contract.name,
+          description: contract.description,
+          royalties: "",
+          properties: "",
+          nftVerify: 0,
+          isSync: true,
+          creator: address,
+          animUrl: "",
+          animStorageId: 0,
+          // address: contract.address,
+        } as any);
+        writeContract(
+          {
+            abi: NFTAbi,
+            address: contract.address,
+            functionName: "mint",
+            args: [tokenId, v, r, s, [], contract.coverIpfs],
+          },
+          {
+            onSettled(data, error, variables, context) {
+              console.log({ data, error, variables, context });
+              setMinting(false);
+            },
+          }
+        );
+      } catch (error) {
+        setMinting(false);
+      }
+    },
+    [writeContract, address]
+  );
+
+  return (
+    <TableRow hover>
+      <TableCell>
+        <Stack direction="row">
+          <StarOutlineRoundedIcon name="star" />
+          <Typography ml={0.5}>0</Typography>
+        </Stack>
+      </TableCell>
+      <TableCell>
+        {hot && <LocalFireDepartmentIcon sx={{ color: "primary.main" }} />}
+      </TableCell>
+      <TableCell>
+        <Stack direction="row" alignItems="center">
+          <img src={data.cover!} height={60} alt="name" />
+          <Typography ml={2}>{data.name}</Typography>
+        </Stack>
+      </TableCell>
+      <TableCell align="center">
+        <Typography color="primary.main">
+          {new Date(data.createTime).toLocaleDateString()}
+        </Typography>
+      </TableCell>
+      <TableCell align="center">
+        <Stack width={120} mx="auto">
+          <Box sx={{ width: "100%", mr: 1, position: "relative" }}>
+            <LinearProgress
+              variant="determinate"
+              value={10}
+              sx={{ height: 18 }}
+            />
+            <Typography
+              variant="body2"
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                lineHeight: "18px",
+                width: "100%",
+                color: "primary.contrastText",
+              }}
+            >
+              {Math.round(Math.random() * 1000) / 100}%
+            </Typography>
+          </Box>
+        </Stack>
+      </TableCell>
+      <TableCell align="center">0 RING</TableCell>
+      <TableCell align="center">
+        <LoadingButton
+          variant="contained"
+          size="small"
+          loading={minting}
+          onClick={() => handleMint(data)}
+        >
+          Mint
+        </LoadingButton>
+      </TableCell>
+    </TableRow>
+  );
+}

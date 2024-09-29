@@ -37,7 +37,7 @@ const ConnectWallet: React.FC = () => {
     if (address) {
       signMessageAsync({
         account: address,
-        message: "Example `personal_sign` message",
+        message: "Welcome to SubLayer",
       }).then(async (signature) => {
         try {
           const loginResp = await UserService.loginWithSignature({

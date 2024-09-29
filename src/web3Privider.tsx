@@ -5,6 +5,7 @@ import { WagmiProvider } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
+import { defineChain } from "viem";
 
 // 0. Setup queryClient
 const queryClient = new QueryClient();
@@ -20,7 +21,37 @@ const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-const chains = [mainnet, sepolia] as const;
+const darwinia = defineChain({
+  id: 701,
+  name: "Darwinia Koi Testnet",
+  nativeCurrency: { name: "RING", symbol: "RING", decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ["https://koi-rpc.darwinia.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'KoiScan',
+      url: 'https://koi-scan.darwinia.network',
+      apiUrl: 'https://koi-scan.darwinia.network/api',
+    },
+  },
+  contracts: {
+    ensRegistry: {
+      address: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    },
+    ensUniversalResolver: {
+      address: '0xce01f8eee7E479C928F8919abD53E553a36CeF67',
+      blockCreated: 19_258_213,
+    },
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 14_353_601,
+    },
+  },
+});
+const chains = [darwinia] as const;
 const config = defaultWagmiConfig({
   chains,
   projectId,

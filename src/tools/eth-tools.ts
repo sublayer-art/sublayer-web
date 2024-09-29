@@ -2,7 +2,7 @@ import Web3 from "web3";
 
 export function wei2Eth(wei?: bigint | string, decimals = 6) {
   if (!wei) return 0;
-  const v = Number(wei) / 1e18; // 1 ETH = 10^18 Gwei
+  const v = Number(wei) / 1e18; // 1 RING = 10^18 Gwei
   if (decimals) {
     return Math.ceil(v * 10 ** decimals) / 10 ** decimals;
   }

@@ -24,36 +24,39 @@ export default class UserService {
     return Http.post<PaginateData<any>>("/user/nftlist", {}, { params });
   }
   static collectionList(params: { address: string }) {
-    return Http.post<PaginateData<CollectionDTO>>("/user/collections", null, { params });
+    return Http.post<PaginateData<CollectionDTO>>("/user/collections", null, {
+      params,
+    });
   }
 }
 
 export type CollectionDTO = {
-  address: "0xf8eb6B50399f7Ca8360D68D9156760B043BD756E";
-  tokenId: "12";
+  address: "0x6f262Bac05a66A8744C6278B0956a8696c6Bc33e";
+  tokenId: "2";
   categoryId: 0;
+  imgUrl: string;
   royalties: "";
   nftVerify: 0;
-  creator: "0x8a3080b08bCe64606Fd1682e55764D4CE6D8FeDE";
+  creator: "0xf42220e63E90067C5387cc42fF796DD16F2a9A53";
   user: null;
   txHash: null;
-  metadataUrl: "ipfs://ipfs/QmPwKiXQntC2xj5haYrD6Q53YCnug9JPBF1ZHfsTX6Hupv";
-  metadataContent: '{"image":"ipfs://ipfs/Qmc2xUTDDH2duqeHknSUd4ZEnBv1VSSj7RVzhJH8skKySo","animation_url":"","external_url":"null/detail/0xf8eb6B50399f7Ca8360D68D9156760B043BD756E:12","name":"Sublayer","attributes":[]}';
+  metadataUrl: "ipfs://ipfs/QmY92TJCPhAbYbqHzVxVK61kr3YJdTzZ6v9f5eE1THnAEB";
+  metadataContent: '{"animation_url":"","external_url":"https://sublayer.art/detail/0x6f262Bac05a66A8744C6278B0956a8696c6Bc33e:2","name":"Zodiac Mouse","attributes":[]}';
   items: [
     {
-      address: "0xf8eb6B50399f7Ca8360D68D9156760B043BD756E";
-      tokenId: "12";
+      address: "0x6f262Bac05a66A8744C6278B0956a8696c6Bc33e";
+      tokenId: "2";
       price: null;
       paytokenAddress: null;
       paytokenName: null;
       paytokenDecimals: 0;
       paytokenSymbol: null;
-      itemOwner: "0x8a3080b08bCe64606Fd1682e55764D4CE6D8FeDE";
+      itemOwner: "0xf42220e63E90067C5387cc42fF796DD16F2a9A53";
       categoryId: 0;
       onsell: false;
       onsellTime: null;
       user: {
-        address: "0x8a3080b08bCe64606Fd1682e55764D4CE6D8FeDE";
+        address: "0xf42220e63E90067C5387cc42fF796DD16F2a9A53";
       };
     }
   ];

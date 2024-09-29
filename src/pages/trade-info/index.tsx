@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect,  useState } from "react";
 import Filter from "./components/Filter";
 
 import Tab from "@mui/material/Tab";
@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import CollectionInfo from "./components/CollectionInfo";
 import Activity from "./components/Activity";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useRequest } from "ahooks";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import Spacer from "@/components/Spacer";
@@ -34,19 +34,13 @@ import ContractService, { ContractDTO } from "@/services/contract";
 
 export default function TradeInfo() {
   const { caddress } = useParams();
-  const locat = useLocation();
   const pageSize = 1000;
 
-  const [details, setDetails] = useState<ContractDTO>();
-  const req = useRequest(ContractService.info, { manual: true });
+  const req = useRequest(ContractService.info, {
+    defaultParams: [caddress!],
+  });
 
-  useEffect(() => {
-    if (locat?.state?.data) {
-      setDetails(locat.state.data);
-    } else if (caddress) {
-      req.runAsync(caddress!).then(setDetails);
-    }
-  }, [caddress, locat]);
+  const data = req.data as ContractDTO;
 
   const [value, setValue] = React.useState("1");
   const [txType, setTxType] = useState<TransactionType>("buy");
@@ -196,7 +190,7 @@ export default function TradeInfo() {
   return (
     <CollectionTradeContext.Provider
       value={{
-        collectionData: details,
+        collectionData: data,
         transactionType: txType,
         buyState,
         sellState,

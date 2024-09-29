@@ -52,9 +52,8 @@ const TradeTable: React.FC = () => {
             </TableCell>
             <TableCell sx={{ width: 220 }}>Collection</TableCell>
             <TableCell align="center">Floor</TableCell>
-            <TableCell align="center">1d Volume</TableCell>
-            <TableCell align="center">1d Sales</TableCell>
-            <TableCell align="center">Market cap</TableCell>
+            <TableCell align="center">Listed</TableCell>
+            <TableCell align="center">Total</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -70,29 +69,23 @@ const TradeTable: React.FC = () => {
                 <TableCell>
                   <Stack direction="row">
                     <StarOutlineRoundedIcon name="star" />
-                    <Typography ml={0.5}>{index + 1}</Typography>
+                    {/* <Typography ml={0.5}>0</Typography> */}
                   </Stack>
                 </TableCell>
                 <TableCell>
-                  {(index + 1) % 2 === 0 && (
+                  {index < 3 && (
                     <LocalFireDepartmentIcon sx={{ color: "primary.main" }} />
                   )}
                 </TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center">
-                    {/* <img
-                      src={row.image}
-                      width={60}
-                      height={60}
-                      alt="name"
-                    /> */}
+                    <img src={row.cover!} height={60} alt="name" />
                     <Typography ml={2}>{row.name}</Typography>
                   </Stack>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography color="primary.main">0 ETH</Typography>
+                  <Typography color="primary.main">0 RING</Typography>
                 </TableCell>
-                <TableCell align="center">-</TableCell>
                 <TableCell align="center">-</TableCell>
                 <TableCell align="center">-</TableCell>
               </TableRow>

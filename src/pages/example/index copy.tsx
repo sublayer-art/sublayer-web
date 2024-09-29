@@ -331,7 +331,7 @@ function TokenInfo({
         address,
         Asset(id("ERC721"), _nftSellAssetData, nftAmount),
         ZERO,
-        Asset(id("ETH"), _nftPurchaseAssetData, _priceSell),
+        Asset(id("RING"), _nftPurchaseAssetData, _priceSell),
         salt,
         0,
         0,

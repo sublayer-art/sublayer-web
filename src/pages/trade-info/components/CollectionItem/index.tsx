@@ -111,7 +111,7 @@ const CollectionItem: React.FC<{
       >
         <Box
           component="img"
-          src={metadata.image}
+          src={data.imgUrl}
           sx={{
             width: "100%",
             height: "100%",
@@ -203,7 +203,7 @@ const CollectionItem: React.FC<{
         </Stack>
         <Stack direction="row" alignItems="center" mt="auto">
           <Typography variant="body1" sx={{ flex: 1, fontWeight: "bold" }}>
-            {wei2Eth(item.price, 6)} ETH
+            {wei2Eth(item.price, 6)} RING
           </Typography>
           <Button
             sx={{

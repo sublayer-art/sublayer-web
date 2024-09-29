@@ -12,9 +12,11 @@ export default defineConfig({
   },
   server: {
     port: 3004,
+    host:'0.0.0.0',
     proxy: {
       "/api": {
-        target: "http://192.168.3.74",
+        target: "https://sublayer.art/api",
+        // target: "http://192.168.3.74",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

@@ -30,7 +30,7 @@ export default class OrderService {
   }
 }
 
-// ETH("ETH", 0), ERC20("ERC20", 1), ERC721("ERC721", 3), ERC721Deprecated("ERC721Deprecated", 4);
+// RING("RING", 0), ERC20("ERC20", 1), ERC721("ERC721", 3), ERC721Deprecated("ERC721Deprecated", 4);
 type TxType = "0" | "1" | "3" | "4";
 
 // SALE(1), BID(2);

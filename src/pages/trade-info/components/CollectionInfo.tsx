@@ -8,11 +8,11 @@ const CollectionInfo: React.FC = () => {
   const { collectionData } = useCollectionTradeContext();
   const [favorite, setFavorite] = useState(false);
   return (
-    <Box sx={{ px: 4, py: 2, width: "100%" }} className="scroll hide-scrollbar">
+    <Box sx={{ px: 4, py: 2, width: "100%" }} className="scroll">
       <Stack direction="row">
         <Stack direction="row" alignItems="center" mr={2} minWidth={280}>
           {collectionData ? (
-            <img alt={collectionData.name} width={60} height={60} />
+            <img src={collectionData.cover} height={60} />
           ) : (
             <Skeleton width={60} height={60} />
           )}
@@ -40,12 +40,13 @@ const CollectionInfo: React.FC = () => {
             </Box>
           }
         />
-        <Stat name="List/Supply" loading={!collectionData} value={`0/0`} />
-        <Stat name="1d Volume" loading={!collectionData} value={0} />
-        <Stat name="1d Sales" loading={!collectionData} value={0} />
-        <Stat name="Total Volume" loading={!collectionData} value={0} />
-        <Stat name="Holders" loading={!collectionData} value={0} />
+        <Stat name="Listed/Total" loading={!collectionData} value={`0/0`} />
       </Stack>
+      <Box mt={1} maxWidth={280}>
+        <Typography fontSize={14} style={{ wordBreak: "break-all" }}>
+          {collectionData?.address}
+        </Typography>
+      </Box>
     </Box>
   );
 };

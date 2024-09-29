@@ -35,6 +35,7 @@ export type ContractItemDTO = {
   creator: "0x8a3080b08bCe64606Fd1682e55764D4CE6D8FeDE";
   user: null;
   txHash: null;
+  imgUrl: string;
   metadataUrl: "ipfs://ipfs/QmTEJgLXdwibUkcpqjki5kNCv6bcE7ejTjcPa2JztQhVXR";
   metadataContent: '{"image":"ipfs://ipfs/Qmc2xUTDDH2duqeHknSUd4ZEnBv1VSSj7RVzhJH8skKySo","animation_url":"","external_url":"null/detail/0xf8eb6B50399f7Ca8360D68D9156760B043BD756E:39","name":"Sublayer","attributes":[]}';
   items: [
@@ -43,9 +44,9 @@ export type ContractItemDTO = {
       tokenId: "39";
       price: "10000000000000000";
       paytokenAddress: "0x0000000000000000000000000000000000000000";
-      paytokenName: "ETH";
+      paytokenName: "RING";
       paytokenDecimals: 18;
-      paytokenSymbol: "ETH";
+      paytokenSymbol: "RING";
       itemOwner: "0x8a3080b08bCe64606Fd1682e55764D4CE6D8FeDE";
       categoryId: 0;
       onsell: true;
@@ -66,7 +67,7 @@ export type ContractItemMetaData = {
 };
 
 export type ContractDTO = {
-  id: 1;
+  id: number;
   createTime: "2024-05-09T06:28:14.000+00:00";
   updateTime: "2024-05-09T07:09:57.000+00:00";
   deleted: false;
@@ -75,7 +76,8 @@ export type ContractDTO = {
   address: "0xf8eb6B50399f7Ca8360D68D9156760B043BD756E";
   shortUrl: null;
   version: null;
-  cover: null;
+  cover: string;
+  coverIpfs: string;
   storageId: null;
   owner: "0x8aab0d36dd9DD45ABCFeBd26C15735c08D0ee775";
   isAdmin: false;

@@ -95,7 +95,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
           writeContract(
             {
               abi: NFTExchangeAbi,
-              address: NftExchange.sepolia,
+              address: NftExchange.darwinia,
               functionName: "exchange",
               value: BigInt(buyResult.buyValue),
               args: [
@@ -207,7 +207,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
                 >
                   <Typography className="label">Price</Typography>
                   <Typography color="gray">
-                    {wei2Eth(item?.price)} ETH
+                    {wei2Eth(item?.price)} RING
                   </Typography>
                 </Stack>
                 <Stack
@@ -216,7 +216,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
                   justifyContent="space-between"
                 >
                   <Typography>Service Fee</Typography>
-                  <Typography color="gray">0 ETH</Typography>
+                  <Typography color="gray">0 RING</Typography>
                 </Stack>
                 <Stack
                   component="li"
@@ -225,7 +225,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
                 >
                   <Typography>Total</Typography>
                   <Typography color="gray">
-                    {wei2Eth(item?.price)} ETH
+                    {wei2Eth(item?.price)} RING
                   </Typography>
                 </Stack>
               </Box>

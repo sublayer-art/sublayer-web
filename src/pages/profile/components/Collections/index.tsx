@@ -48,7 +48,7 @@ const Collections: React.FC = () => {
         abi: NFTAbi,
         address: collection.address,
         functionName: "approve",
-        args: [TransferProxy.sepolia, collection.items[0].tokenId],
+        args: [TransferProxy.darwinia, collection.items[0].tokenId],
       });
     },
     [writeContractAsync]
@@ -59,7 +59,7 @@ const Collections: React.FC = () => {
       console.log("sell ", collection);
       try {
         await handleApprove(collection);
-        const { r, s, v } = await DAPPService.signMessage(NFTAddress.sepolia);
+        const { r, s, v } = await DAPPService.signMessage(NFTAddress.darwinia);
 
         const prepareOrderResult = await OrderService.prepare({
           type: "1",
@@ -69,7 +69,7 @@ const Collections: React.FC = () => {
           sellValue: "1",
           sellType: "3",
           buyToken: "0x0000000000000000000000000000000000000000",
-          buyTokenId: "0",
+          buyTokenId: "1",
           buyValue: eth2Wei(0.01),
           buyType: "0",
           salt: "1",
@@ -91,7 +91,7 @@ const Collections: React.FC = () => {
         writeContract(
           {
             abi: ExchangeOrdersHolderAbi,
-            address: ExchangeOrdersHolder.sepolia,
+            address: ExchangeOrdersHolder.darwinia,
             functionName: "add",
             args: [
               [

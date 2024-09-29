@@ -10,6 +10,7 @@ const CollectionItem: React.FC<{
   const hoverBGColor = "rgba(116, 127, 139, 0.42)";
 
   const metadata = JSON.parse(data.metadataContent);
+  console.log('metadata:',metadata)
   return (
     <Card
       sx={{
@@ -70,6 +71,9 @@ const CollectionItem: React.FC<{
               pointerEvents: "auto",
             }}
           >
+            {
+              
+            }
             <Button
               size="small"
               variant="contained"
@@ -94,7 +98,7 @@ const CollectionItem: React.FC<{
         }}
       >
         <img
-          src={`https://ipfs.io/${metadata.image.split("://")[1]}`}
+          src={data.imgUrl}
           style={{
             border: "none",
             width: "100%",

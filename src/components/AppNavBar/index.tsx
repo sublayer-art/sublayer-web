@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import Search from "./Search";
 import ConnectWallet from "./ConnectWallet";
 import Spacer from "../Spacer";
 
@@ -24,7 +23,6 @@ const AppNavBar: React.FC = () => {
             </Stack>
           </Box>
         </Link>
-        <Search />
         <Spacer />
         <NavList />
         <ConnectWallet />
