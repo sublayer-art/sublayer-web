@@ -85,7 +85,7 @@ const ListDialog = forwardRef<ListAction>((_, ref) => {
         });
         const message = "sign message";
         const signature = await signMessageAsync({ account: address, message });
-        await OrderService.add({
+        const addOrderResult = await OrderService.add({
           ...prepareOrderResult,
           signature,
           message,
@@ -121,22 +121,23 @@ const ListDialog = forwardRef<ListAction>((_, ref) => {
           {
             onSettled(data, error, variables) {
               console.log(data, error, variables);
-              setSubmitting(false);
             },
             onSuccess() {
-              setOpen(false);
-              toast.success("list successful");
+              toast.success("上架成功");
             },
             onError(error) {
               toast.error(error.message);
             },
           }
         );
+
+        console.log({ addOrderResult });
       } catch (error) {
         console.error(error);
-        setSubmitting(false);
 
         toast.error((error as Error).message);
+      } finally {
+        setSubmitting(false);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

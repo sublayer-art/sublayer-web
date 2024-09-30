@@ -3,40 +3,13 @@ import { CollectionDTO } from "@/services/user";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React, { useCallback } from "react";
-import { useWriteContract } from "wagmi";
-import NFTExchangeAbi from "@/contract/abis/NftExchagne.json";
-import { NftExchange } from "@/contract/addresses";
 
 const CollectionItem: React.FC<{
   data: CollectionDTO;
-  onList: VoidFunction;
-}> = ({ data, onList }) => {
+}> = ({ data }) => {
   const hoverBGColor = "rgba(116, 127, 139, 0.42)";
 
   const metadata = JSON.parse(data.metadataContent);
-  const isOnSell = data.items?.[0]?.onsell === true;
-  const item = data.items?.[0];
-const {writeContract} = useWriteContract();
-  const handleUnList = useCallback(() => {
-    if(!item) return;
-    // writeContract(
-    //   {
-    //     abi: NFTExchangeAbi,
-    //     address: NftExchange.darwinia,
-    //     functionName: "cancel",
-    //     args: [
-    //       [
-    //         [
-    //           item.itemOwner, // owner
-    //           buyResult.salt, // salt
-    //           [buyResult.sellToken, Number(buyResult.sellTokenId), 3], // sellAsset
-    //           [buyResult.buyToken, Number(buyResult.buyTokenId), 0], // buyAsset
-    //         ], // key
-    //       ] // order
-    //     ],
-    //   })
-
-  }, []);
 
   return (
     <Card
@@ -75,80 +48,6 @@ const {writeContract} = useWriteContract();
       }}
       variant="outlined"
     >
-      {isOnSell && (
-        <Typography
-          variant="body2"
-          color="primary"
-          sx={{
-            position: "absolute",
-            top: 10,
-            left: 10,
-            borderRadius: "0.13rem",
-            background: "rgba(28, 31, 21, 0.8)",
-            height: "1.3rem",
-            display: "inline-bolck",
-            lineHeight: "1.3rem",
-            minWidth: "3.5rem",
-            px: 1,
-            textAlign: "center",
-            zIndex:1
-          }}
-        >
-          on sell
-        </Typography>
-      )}
-      <Box
-        className="actions"
-        sx={{
-          width: "100%",
-          height: "100%",
-          inset: 0,
-          position: "absolute",
-          pointerEvents: "none",
-        }}
-      >
-        <Stack
-          sx={{
-            width: "100%",
-            height: "100%",
-          }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Stack
-            sx={{
-              pointerEvents: "auto",
-            }}
-          >
-            {isOnSell ? (
-              <Button
-                size="small"
-                variant="contained"
-                disableElevation
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleUnList();
-                }}
-              >
-                UnList
-              </Button>
-            ) : (
-              <Button
-                size="small"
-                variant="contained"
-                disableElevation
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onList();
-                }}
-              >
-                List
-              </Button>
-            )}
-          </Stack>
-        </Stack>
-      </Box>
-
       <Box
         sx={{
           aspectRatio: 0.95,

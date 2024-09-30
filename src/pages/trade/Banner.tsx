@@ -14,6 +14,7 @@ import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
 
+const items = ["/banner-1.jpg", "/banner-2.png"];
 const Banner: React.FC = () => {
   function PrevArrow(props: any) {
     return (
@@ -80,7 +81,7 @@ const Banner: React.FC = () => {
                 width: "100%",
                 bottom: 0,
                 padding: 0,
-                my:1,
+                my: 1,
                 listStyle: "none",
                 // pointerEvents: "none",
                 display: "flex !important",
@@ -110,23 +111,23 @@ const Banner: React.FC = () => {
           );
         }}
       >
-        <Item />
-        <Item />
-        <Item />
+        {items.map((item, index) => (
+          <Item image={item} key={index} />
+        ))}
       </Slider>
     </Box>
   );
 };
 export default Banner;
 
-function Item() {
+function Item(props: { image: string }) {
   return (
     <Box position="relative" width="100%" height="100%">
       {/* 背景 */}
       <Box
         position="absolute"
         style={{
-          backgroundImage: `url(/banner-1.jpg)`,
+          backgroundImage: `url(${props.image})`,
           zIndex: -1,
           top: 0,
           left: 0,

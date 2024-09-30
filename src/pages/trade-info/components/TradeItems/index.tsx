@@ -9,9 +9,9 @@ import OrderModel, { OrderModelRef } from "../OrderModel";
 
 const TradeItems: React.FC = () => {
   const orderModelRef = useRef<OrderModelRef>(null);
-  const { buyState, onSelectItem, loadItems } = useCollectionTradeContext();
+  const { buyState, loadItems } = useCollectionTradeContext();
 
-  const { items = [], selectedItems, loading, hasMore } = buyState;
+  const { items = [], loading, hasMore } = buyState;
 
   if (items.length === 0) {
     return (
@@ -40,12 +40,9 @@ const TradeItems: React.FC = () => {
         hasMore={hasMore}
         itemBuilder={(index) => {
           const item = items[index];
-          const selected = selectedItems.includes(item);
           return (
             <CollectionItem
               data={item}
-              selected={selected}
-              onSelect={() => onSelectItem(item)}
               onBuy={() => orderModelRef.current?.show(item)}
             />
           );

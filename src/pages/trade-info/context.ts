@@ -8,7 +8,6 @@ export type StateOfTransactionType = {
   loading: boolean;
   hasMore: boolean;
   currentPage: number;
-  selectedItems: Array<any>;
 };
 
 interface CollectionTradeState {
@@ -17,8 +16,6 @@ interface CollectionTradeState {
   buyState: StateOfTransactionType;
   sellState: StateOfTransactionType;
   loadItems: () => Promise<void>;
-  onSelectItem: (item: any) => void;
-  onSliderChange: (value: number) => void;
 }
 
 const CollectionTradeContext = createContext({} as CollectionTradeState);

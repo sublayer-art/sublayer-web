@@ -10,17 +10,14 @@ import { useRequest } from "ahooks";
 import UserService from "@/services/user";
 import ListDialog, { ListAction } from "./ListDialog";
 
-const Collections: React.FC = () => {
+const ListedCollections: React.FC = () => {
   const { address } = useAccount();
   const { open } = useWeb3Modal();
   const listRef = useRef<ListAction>(null);
 
-  const { data, loading, run, refresh } = useRequest(
-    UserService.collectionList,
-    {
-      manual: true,
-    }
-  );
+  const { data, loading, run, refresh } = useRequest(UserService.onSales, {
+    manual: true,
+  });
 
   useEffect(() => {
     if (address) {
@@ -117,4 +114,4 @@ const Collections: React.FC = () => {
     );
   }, [address, loading, open, records, refresh]);
 };
-export default Collections;
+export default ListedCollections;

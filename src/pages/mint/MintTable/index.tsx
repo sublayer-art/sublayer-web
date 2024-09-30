@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from "react";
 import {
-  Box,
   CircularProgress,
-  LinearProgress,
   Stack,
   Table,
   TableBody,
@@ -12,9 +10,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import StarRounded from "@mui/icons-material/StarRounded";
-import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import { useRequest } from "ahooks";
 import Center from "@/components/Center";
 import Empty from "@/components/Empty";
@@ -48,15 +43,9 @@ const MintTable: React.FC = () => {
       >
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 80 }}>
-              <StarRounded />
-            </TableCell>
-            <TableCell sx={{ width: 40 }}>
-              <LocalFireDepartmentIcon />
-            </TableCell>
             <TableCell sx={{ width: 220 }}>Collection</TableCell>
             <TableCell align="center">Deploy Time</TableCell>
-            <TableCell align="center">Progress</TableCell>
+            <TableCell align="center">Minted</TableCell>
             <TableCell align="center">Price</TableCell>
             <TableCell align="center"></TableCell>
           </TableRow>
@@ -82,13 +71,7 @@ const MintTable: React.FC = () => {
 };
 export default MintTable;
 
-function ITableRow({
-  data,
-  hot = false,
-}: {
-  data: ContractDTO;
-  hot?: boolean;
-}) {
+function ITableRow({ data }: { data: ContractDTO }) {
   const { address } = useAccount();
   const { writeContract } = useWriteContract();
   const [minting, setMinting] = useState(false);
@@ -144,15 +127,6 @@ function ITableRow({
   return (
     <TableRow hover>
       <TableCell>
-        <Stack direction="row">
-          <StarOutlineRoundedIcon name="star" />
-          <Typography ml={0.5}>0</Typography>
-        </Stack>
-      </TableCell>
-      <TableCell>
-        {hot && <LocalFireDepartmentIcon sx={{ color: "primary.main" }} />}
-      </TableCell>
-      <TableCell>
         <Stack direction="row" alignItems="center">
           <img src={data.cover!} height={60} alt="name" />
           <Typography ml={2}>{data.name}</Typography>
@@ -163,30 +137,7 @@ function ITableRow({
           {new Date(data.createTime).toLocaleDateString()}
         </Typography>
       </TableCell>
-      <TableCell align="center">
-        <Stack width={120} mx="auto">
-          <Box sx={{ width: "100%", mr: 1, position: "relative" }}>
-            <LinearProgress
-              variant="determinate"
-              value={10}
-              sx={{ height: 18 }}
-            />
-            <Typography
-              variant="body2"
-              sx={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                lineHeight: "18px",
-                width: "100%",
-                color: "primary.contrastText",
-              }}
-            >
-              {Math.round(Math.random() * 1000) / 100}%
-            </Typography>
-          </Box>
-        </Stack>
-      </TableCell>
+      <TableCell align="center">{data.collectionCount || 0}</TableCell>
       <TableCell align="center">0 RING</TableCell>
       <TableCell align="center">
         <LoadingButton

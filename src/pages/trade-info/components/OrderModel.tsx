@@ -29,6 +29,7 @@ import {
   useState,
 } from "react";
 import { useAccount, useWriteContract } from "wagmi";
+import useToast from "@/hooks/useToast";
 
 export interface OrderModelRef {
   show: (data: any) => void;
@@ -64,6 +65,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
     const initState = () => {
       setData(undefined);
     };
+    const toast = useToast();
 
     const [submitting, setSubmitting] = useState(false);
 
@@ -118,9 +120,13 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
               ],
             },
             {
+              onSuccess() {
+                toast.success("buy successful");
+                setIsOpen(false);
+              },
               onSettled(...args) {
                 setSubmitting(false);
-                console.log({...args});
+                console.log({ ...args });
                 onSuccess?.();
               },
             }

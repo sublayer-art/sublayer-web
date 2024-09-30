@@ -3,9 +3,6 @@ import { CollectionDTO } from "@/services/user";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React, { useCallback } from "react";
-import { useWriteContract } from "wagmi";
-import NFTExchangeAbi from "@/contract/abis/NftExchagne.json";
-import { NftExchange } from "@/contract/addresses";
 
 const CollectionItem: React.FC<{
   data: CollectionDTO;
@@ -15,28 +12,8 @@ const CollectionItem: React.FC<{
 
   const metadata = JSON.parse(data.metadataContent);
   const isOnSell = data.items?.[0]?.onsell === true;
-  const item = data.items?.[0];
-const {writeContract} = useWriteContract();
-  const handleUnList = useCallback(() => {
-    if(!item) return;
-    // writeContract(
-    //   {
-    //     abi: NFTExchangeAbi,
-    //     address: NftExchange.darwinia,
-    //     functionName: "cancel",
-    //     args: [
-    //       [
-    //         [
-    //           item.itemOwner, // owner
-    //           buyResult.salt, // salt
-    //           [buyResult.sellToken, Number(buyResult.sellTokenId), 3], // sellAsset
-    //           [buyResult.buyToken, Number(buyResult.buyTokenId), 0], // buyAsset
-    //         ], // key
-    //       ] // order
-    //     ],
-    //   })
 
-  }, []);
+  const handleUnList = useCallback(() => {}, []);
 
   return (
     <Card

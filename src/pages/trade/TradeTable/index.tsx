@@ -18,6 +18,7 @@ import { useRequest } from "ahooks";
 import Center from "@/components/Center";
 import Empty from "@/components/Empty";
 import ContractService from "@/services/contract";
+import { wei2Eth } from "@/tools/eth-tools";
 
 const TradeTable: React.FC = () => {
   const nav = useNavigate();
@@ -84,10 +85,10 @@ const TradeTable: React.FC = () => {
                   </Stack>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography color="primary.main">0 RING</Typography>
+                  <Typography color="primary.main">{row.price ? `${wei2Eth(BigInt(row.price))} RING` :  '-'}</Typography>
                 </TableCell>
-                <TableCell align="center">-</TableCell>
-                <TableCell align="center">-</TableCell>
+                <TableCell align="center">{row.saleCount}</TableCell>
+                <TableCell align="center">{row.collectionCount}</TableCell>
               </TableRow>
             );
           })}

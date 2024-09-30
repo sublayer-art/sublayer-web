@@ -1,5 +1,3 @@
-import CheckCircle from "@mui/icons-material/CheckCircle";
-import CheckCircleOutline from "@mui/icons-material/CheckCircleOutline";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import StarOutlineRounded from "@mui/icons-material/StarOutlineRounded";
 import StarRounded from "@mui/icons-material/StarRounded";
@@ -11,10 +9,8 @@ import { wei2Eth } from "@/tools/eth-tools";
 
 const CollectionItem: React.FC<{
   data: ContractItemDTO;
-  onSelect: VoidFunction;
-  selected?: boolean;
   onBuy?: VoidFunction;
-}> = ({ data, onSelect, onBuy, selected = false }) => {
+}> = ({ data, onBuy }) => {
   const [collectioned, setCollectioned] = useState(false);
   const hoverBGColor = "rgba(116, 127, 139, 0.42)";
   const item = data.items[0];
@@ -22,7 +18,6 @@ const CollectionItem: React.FC<{
   const metadata: ContractItemMetaData = JSON.parse(data.metadataContent);
   return (
     <Card
-      onClick={onSelect}
       sx={{
         width: "100%",
         borderRadius: "0.4rem",
@@ -55,11 +50,6 @@ const CollectionItem: React.FC<{
             opacity: 1,
           },
         },
-        ...(selected
-          ? {
-              borderColor: "primary.main",
-            }
-          : {}),
       }}
       variant="outlined"
     >
@@ -138,30 +128,6 @@ const CollectionItem: React.FC<{
           >
             {itemOwner.slice(itemOwner.length - 4).toUpperCase()}
           </Typography>
-          {
-            <Stack
-              sx={{
-                width: "1.3rem",
-                height: "1.3rem",
-                display: "inline-flex",
-                top: 10,
-                right: 8,
-                position: "absolute",
-              }}
-              alignItems="center"
-              justifyContent="center"
-            >
-              {selected ? (
-                <CheckCircle color="primary" sx={{ fontSize: 18 }} />
-              ) : (
-                <CheckCircleOutline
-                  className="CheckCircleOutline"
-                  color="primary"
-                  sx={{ fontSize: 18 }}
-                />
-              )}
-            </Stack>
-          }
         </Box>
       </Box>
 
@@ -218,10 +184,7 @@ const CollectionItem: React.FC<{
             onClick={(e) => {
               e.stopPropagation();
               DetailModel.show({
-                data: {
-                  ...data,
-                  goodsImage: metadata.image,
-                },
+                data,
               });
             }}
           >

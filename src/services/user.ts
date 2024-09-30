@@ -28,6 +28,16 @@ export default class UserService {
       params,
     });
   }
+  static onSales(params: { address: string }) {
+    return Http.post<PaginateData<CollectionDTO>>("/user/onsales", null, {
+      params,
+    });
+  }
+  static createdList(params: { address: string }) {
+    return Http.post<PaginateData<CollectionDTO>>("/user/created", null, {
+      params,
+    });
+  }
 }
 
 export type CollectionDTO = {
@@ -53,7 +63,7 @@ export type CollectionDTO = {
       paytokenSymbol: null;
       itemOwner: "0xf42220e63E90067C5387cc42fF796DD16F2a9A53";
       categoryId: 0;
-      onsell: false;
+      onsell: boolean;
       onsellTime: null;
       user: {
         address: "0xf42220e63E90067C5387cc42fF796DD16F2a9A53";

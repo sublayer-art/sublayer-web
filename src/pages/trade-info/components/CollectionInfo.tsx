@@ -3,6 +3,7 @@ import { useCollectionTradeContext } from "../context";
 import { Box, IconButton, Skeleton, Stack, Typography } from "@mui/material";
 import StarBorderRounded from "@mui/icons-material/StarBorderRounded";
 import StarRounded from "@mui/icons-material/StarRounded";
+import { wei2Eth } from "@/tools/eth-tools";
 
 const CollectionInfo: React.FC = () => {
   const { collectionData } = useCollectionTradeContext();
@@ -36,11 +37,11 @@ const CollectionInfo: React.FC = () => {
           loading={!collectionData}
           value={
             <Box component={"span"} color="primary.main">
-              0
+              {collectionData?.price ? `${wei2Eth(BigInt(collectionData.price))} RING` :  '-'}
             </Box>
           }
         />
-        <Stat name="Listed/Total" loading={!collectionData} value={`0/0`} />
+        <Stat name="Listed/Total" loading={!collectionData} value={`${collectionData?.saleCount ??0}/${collectionData?.collectionCount ?? 0}`} />
       </Stack>
       <Box mt={1} maxWidth={280}>
         <Typography fontSize={14} style={{ wordBreak: "break-all" }}>

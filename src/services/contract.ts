@@ -68,6 +68,9 @@ export type ContractItemMetaData = {
 
 export type ContractDTO = {
   id: number;
+  collectionCount: number;
+  saleCount: number;
+  price: number | null;
   createTime: "2024-05-09T06:28:14.000+00:00";
   updateTime: "2024-05-09T07:09:57.000+00:00";
   deleted: false;

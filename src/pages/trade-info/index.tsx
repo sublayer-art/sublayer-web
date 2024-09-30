@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect,  useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Filter from "./components/Filter";
 
 import Tab from "@mui/material/Tab";
@@ -28,7 +28,6 @@ import { useParams } from "react-router-dom";
 import { useRequest } from "ahooks";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import Spacer from "@/components/Spacer";
-import BatchOperations from "./components/BatchOperations";
 import CustomTab from "@/components/CustomTab";
 import ContractService, { ContractDTO } from "@/services/contract";
 
@@ -50,7 +49,6 @@ export default function TradeInfo() {
     loading: true,
     hasMore: true,
     currentPage: 1,
-    selectedItems: [],
   });
 
   const [sellState, setSellState] = useState<StateOfTransactionType>({
@@ -58,7 +56,6 @@ export default function TradeInfo() {
     loading: true,
     hasMore: true,
     currentPage: 1,
-    selectedItems: [],
   });
 
   const buyStateReq = useRequest(ContractService.listItems, {
@@ -120,60 +117,6 @@ export default function TradeInfo() {
     });
   }, [caddress, txType, buyState]);
 
-  const onSelectItem = useCallback(
-    (item: any, txType: TransactionType = "buy") => {
-      if (txType === "buy") {
-        const idx = buyState.selectedItems.findIndex((v) => v === item);
-        if (idx >= 0) {
-          buyState.selectedItems.splice(idx, 1);
-        } else {
-          buyState.selectedItems.push(item);
-        }
-        setBuyState({ ...buyState });
-      } else {
-        const idx = sellState.selectedItems.findIndex((v) => v === item);
-        if (idx >= 0) {
-          sellState.selectedItems.splice(idx);
-        } else {
-          sellState.selectedItems.push(item);
-        }
-        setSellState({ ...sellState });
-      }
-    },
-    [buyState, sellState]
-  );
-
-  const onSliderChange = useCallback(
-    (value: number) => {
-      if (txType === "buy") {
-        const { selectedItems, items } = buyState;
-        const pasedV = parseInt(value + "");
-        if (selectedItems.length === pasedV) return;
-        if (selectedItems.length < pasedV) {
-          let sLen = selectedItems.length;
-          for (let i = 0; i < items.length; i++) {
-            const item = items[i];
-            if (!selectedItems.includes(item)) {
-              selectedItems.push(item);
-              sLen++;
-            }
-            if (sLen === pasedV) break;
-          }
-        } else {
-          // 按 items 顺序从后向前删除已选择的 item
-          for (let i = items.length - 1; i >= 0; i--) {
-            const idx = selectedItems.indexOf(items[i]);
-            if (idx >= 0) {
-              selectedItems.splice(idx, 1);
-            }
-            if (selectedItems.length === value) break;
-          }
-        }
-        setBuyState({ ...buyState });
-      }
-    },
-    [txType, buyState]
-  );
 
   useEffect(() => {
     reload();
@@ -194,8 +137,6 @@ export default function TradeInfo() {
         transactionType: txType,
         buyState,
         sellState,
-        onSelectItem,
-        onSliderChange,
         loadItems,
       }}
     >
@@ -219,8 +160,6 @@ export default function TradeInfo() {
                 <CustomTab label="Sell" value="sell" />
               </Tabs>
             </Box>
-            <Divider />
-            <BatchOperations />
             <Divider />
             <Filter />
           </Box>
@@ -287,7 +226,6 @@ export default function TradeInfo() {
                   bottom: showPanel ? 0 : -348,
                   width: "100vw",
                   transition: "bottom 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
-                  // transform: `translateY(${showPanel ? "0" : "348"}px)`,
                 }}
               >
                 <Box p={2}>
@@ -339,9 +277,7 @@ export default function TradeInfo() {
                   </Stack>
                 </Box>
                 <Divider />
-                <Box flex={1} className="scroll">
-                  <BatchOperations />
-                </Box>
+                <Filter />
               </Paper>
             </Hidden>
           </Stack>

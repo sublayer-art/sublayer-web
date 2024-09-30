@@ -1,6 +1,6 @@
 import { Box, Container } from "@mui/material";
 import MintTable from "./MintTable";
-import Banner from "./Banner";
+import Banner from "../trade/Banner";
 
 export default function mint() {
   return (

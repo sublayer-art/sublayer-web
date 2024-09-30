@@ -7,10 +7,11 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Collections from "./components/Collections";
 import { Box, Button, Divider, Hidden, Paper, Stack } from "@mui/material";
-import Activity from "./components/Activity";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import Spacer from "@/components/Spacer";
 import ProfileInfo from "./components/ProfileInfo";
+import ListedCollections from "./components/Listed";
+import CreatedCollections from "./components/Created";
 
 export default function Profile() {
   const [value, setValue] = React.useState("1");
@@ -55,9 +56,10 @@ export default function Profile() {
               }}
               sx={{ px: 2 }}
             >
-              <Tab label={"Collections"} value="1" disableRipple />
+              <Tab label="Collections" value="1" disableRipple />
 
-              <Tab label="Activity" value="2" disableRipple />
+              <Tab label="Listed" value="2" disableRipple />
+              <Tab label="Created" value="3" disableRipple />
             </TabList>
             <Divider />
             <Box flex={1} overflow="hidden">
@@ -65,7 +67,10 @@ export default function Profile() {
                 <Collections />
               </TabPanel>
               <TabPanel value="2">
-                <Activity />
+                <ListedCollections />
+              </TabPanel>
+              <TabPanel value="3">
+                <CreatedCollections />
               </TabPanel>
             </Box>
           </TabContext>
