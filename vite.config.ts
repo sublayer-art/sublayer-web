@@ -1,17 +1,9 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import legacy from "@vitejs/plugin-legacy";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    legacy({
-      targets: ["defaults", "not IE 11"], // 根据需要调整目标
-    }),
-    nodePolyfills(),
-  ],
+  plugins: [react()],
   resolve: {
     alias: [{ find: "@", replacement: "/src" }],
   },
@@ -26,9 +18,5 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
-  },
-
-  build: {
-    target: "esnext",
   },
 });

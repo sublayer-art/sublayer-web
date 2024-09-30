@@ -64,7 +64,7 @@ const MintFormModal = forwardRef<MintRef, MintFormModalProps>((props, ref) => {
   };
 
   const inscribeContent = `{"p":"unifi","op":"mint","tick":"${data?.goodsName}","amt":"1"}`;
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting] = useState(false);
 
   const handleMint = useCallback(
     (address: string) => {
