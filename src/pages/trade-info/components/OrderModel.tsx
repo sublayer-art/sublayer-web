@@ -132,6 +132,8 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
             }
           );
         } catch (error) {
+          console.error(error);
+
           setSubmitting(false);
         }
       },

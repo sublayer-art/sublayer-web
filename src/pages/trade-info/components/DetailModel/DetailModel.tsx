@@ -92,21 +92,6 @@ export const DetailModel: React.FC<DetailModelProps> & {
               justifyContent="space-between"
               alignItems="start"
             >
-              <Typography sx={{ flex: "0 0 120px" }}>create time</Typography>
-              <Typography
-                sx={{
-                  wordBreak: "break-all",
-                }}
-              >
-                {data.creator}
-              </Typography>
-            </Stack>
-            <Stack
-              direction="row"
-              py={1}
-              justifyContent="space-between"
-              alignItems="start"
-            >
               <Typography sx={{ flex: "0 0 120px" }}>owner</Typography>
               <Typography
                 component="a"
