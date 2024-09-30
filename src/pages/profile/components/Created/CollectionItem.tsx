@@ -2,7 +2,7 @@ import { DetailModel } from "@/pages/trade-info/components/DetailModel/DetailMod
 import { CollectionDTO } from "@/services/user";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
-import React, { useCallback } from "react";
+import React from "react";
 
 const CollectionItem: React.FC<{
   data: CollectionDTO;

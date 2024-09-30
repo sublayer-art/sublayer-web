@@ -3,9 +3,6 @@ import { CollectionDTO } from "@/services/user";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React, { useCallback } from "react";
-import { useWriteContract } from "wagmi";
-import NFTExchangeAbi from "@/contract/abis/NftExchagne.json";
-import { NftExchange } from "@/contract/addresses";
 
 const CollectionItem: React.FC<{
   data: CollectionDTO;
@@ -16,7 +13,6 @@ const CollectionItem: React.FC<{
   const metadata = JSON.parse(data.metadataContent);
   const isOnSell = data.items?.[0]?.onsell === true;
   const item = data.items?.[0];
-const {writeContract} = useWriteContract();
   const handleUnList = useCallback(() => {
     if(!item) return;
     // writeContract(
@@ -36,7 +32,7 @@ const {writeContract} = useWriteContract();
     //     ],
     //   })
 
-  }, []);
+  }, [item]);
 
   return (
     <Card

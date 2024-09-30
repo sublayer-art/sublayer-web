@@ -5,7 +5,6 @@ import FormItem from "@/components/Form/FormItem";
 import FormUpload from "@/components/Form/FormUpload";
 import { ERC721RaribleFactoryC2Abi } from "@/contract/abis/ERC721RaribleFactoryC2";
 import { ERC721RaribleFactoryC2Address } from "@/contract/addresses";
-import useToast from "@/hooks/useToast";
 import { colorWithOpacity } from "@/tools/style";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Container, Typography } from "@mui/material";
@@ -23,7 +22,7 @@ const unifiGamesArgs = [
 ];
 
 export default function Inscribe() {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { open } = useWeb3Modal();
   const getAddressResult = useReadContract({
     abi: ERC721RaribleFactoryC2Abi,
@@ -33,8 +32,7 @@ export default function Inscribe() {
   });
   const { writeContract } = useWriteContract();
   console.log({ getAddressResult });
-  const toast = useToast();
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting] = useState(false);
 
   const handleSubmit = useCallback(() => {
     writeContract(
