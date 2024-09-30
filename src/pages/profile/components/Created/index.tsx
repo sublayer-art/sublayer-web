@@ -2,26 +2,18 @@ import Center from "@/components/Center";
 import Empty from "@/components/Empty";
 import ResponsiveGrid from "@/components/ResponsiveGrid";
 import { Box, Button, CircularProgress, Skeleton, Stack } from "@mui/material";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import CollectionItem from "./CollectionItem";
 import { useAccount } from "wagmi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useRequest } from "ahooks";
-import UserService from "@/services/user";
+import { useProfileState } from "../../context";
 
 const CreatedCollections: React.FC = () => {
   const { address } = useAccount();
   const { open } = useWeb3Modal();
 
-  const { data, loading, run, refresh } = useRequest(UserService.createdList, {
-    manual: true,
-  });
-
-  useEffect(() => {
-    if (address) {
-      run({ address });
-    }
-  }, [address]);
+  const { createdReq} = useProfileState();
+  const { data, loading, refresh } = createdReq;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const records = data?.records || [];

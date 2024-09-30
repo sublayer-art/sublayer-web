@@ -2,28 +2,17 @@ import Center from "@/components/Center";
 import Empty from "@/components/Empty";
 import ResponsiveGrid from "@/components/ResponsiveGrid";
 import { Box, Button, CircularProgress, Skeleton, Stack } from "@mui/material";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo } from "react";
 import CollectionItem from "./CollectionItem";
 import { useAccount } from "wagmi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useRequest } from "ahooks";
-import UserService from "@/services/user";
-import ListDialog, { ListAction } from "./ListDialog";
+import { useProfileState } from "../../context";
 
 const ListedCollections: React.FC = () => {
   const { address } = useAccount();
   const { open } = useWeb3Modal();
-  const listRef = useRef<ListAction>(null);
-
-  const { data, loading, run, refresh } = useRequest(UserService.onSales, {
-    manual: true,
-  });
-
-  useEffect(() => {
-    if (address) {
-      run({ address });
-    }
-  }, [address]);
+  const { listedReq } = useProfileState();
+  const { data, loading, refresh } = listedReq;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const records = data?.records || [];
@@ -74,20 +63,12 @@ const ListedCollections: React.FC = () => {
     }
     return (
       <>
-        <ListDialog ref={listRef} />
         <ResponsiveGrid
           itemWidth={200}
           itemsCount={records.length}
           itemBuilder={(index) => {
             const item = records[index];
-            return (
-              <CollectionItem
-                data={item}
-                onList={() => {
-                  listRef.current?.list(item);
-                }}
-              />
-            );
+            return <CollectionItem data={item} />;
           }}
           hasMore={false}
           loadingIndicator={

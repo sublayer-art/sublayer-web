@@ -6,8 +6,7 @@ import React, { useCallback } from "react";
 
 const CollectionItem: React.FC<{
   data: CollectionDTO;
-  onList: VoidFunction;
-}> = ({ data, onList }) => {
+}> = ({ data }) => {
   const hoverBGColor = "rgba(116, 127, 139, 0.42)";
 
   const metadata = JSON.parse(data.metadataContent);
@@ -68,7 +67,7 @@ const CollectionItem: React.FC<{
             minWidth: "3.5rem",
             px: 1,
             textAlign: "center",
-            zIndex:1
+            zIndex: 1,
           }}
         >
           on sell
@@ -97,31 +96,17 @@ const CollectionItem: React.FC<{
               pointerEvents: "auto",
             }}
           >
-            {isOnSell ? (
-              <Button
-                size="small"
-                variant="contained"
-                disableElevation
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleUnList();
-                }}
-              >
-                UnList
-              </Button>
-            ) : (
-              <Button
-                size="small"
-                variant="contained"
-                disableElevation
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onList();
-                }}
-              >
-                List
-              </Button>
-            )}
+            <Button
+              size="small"
+              variant="contained"
+              disableElevation
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUnList();
+              }}
+            >
+              UnList
+            </Button>
           </Stack>
         </Stack>
       </Box>

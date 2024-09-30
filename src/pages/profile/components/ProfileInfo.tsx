@@ -2,10 +2,12 @@ import { wei2Eth } from "@/tools/eth-tools";
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useAccount, useBalance } from "wagmi";
+import { useProfileState } from "../context";
 
 const ProfileInfo: React.FC = () => {
   const { address } = useAccount();
   const balance = useBalance({ address });
+  const {collectionReq, listedReq, createdReq} = useProfileState()
 
   const addressText = address
     ? `${address.slice(0, 4)}...${address.slice(address.length - 4)}`
@@ -30,15 +32,21 @@ const ProfileInfo: React.FC = () => {
           </Typography>
         </Stack>
         <Stack component="li" direction="row" my={1}>
-          <Typography>Total Listed</Typography>
+          <Typography>Collections</Typography>
           <Typography ml="auto" color="primary">
-            0/0
+            {collectionReq.data?.records.length ?? 0}
           </Typography>
         </Stack>
         <Stack component="li" direction="row" my={1}>
-          <Typography>Collections</Typography>
+          <Typography>Listed</Typography>
           <Typography ml="auto" color="primary">
-            0
+          {listedReq.data?.records.length ?? 0}
+          </Typography>
+        </Stack>
+        <Stack component="li" direction="row" my={1}>
+          <Typography>Created</Typography>
+          <Typography ml="auto" color="primary">
+          {createdReq.data?.records.length ?? 0}
           </Typography>
         </Stack>
       </Box>
