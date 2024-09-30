@@ -1,8 +1,6 @@
 import Http from "@/tools/http";
 
 export default class NFTService {
-
-
   static add(params: {
     nft: {
       contractId: number;
@@ -30,6 +28,10 @@ export default class NFTService {
     address: string;
   }) {
     return Http.post("/nft/add", {}, { params });
+  }
+
+  static nftHistory() {
+    return Http.post("/nft/history");
   }
 }
 
