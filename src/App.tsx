@@ -8,7 +8,6 @@ import Mint from "./pages/mint";
 import Profile from "./pages/profile";
 import TradeInfo from "./pages/trade-info";
 import Trade from "./pages/trade";
-import ExamplePage from "./pages/example";
 
 function App() {
   return (
@@ -28,7 +27,6 @@ function App() {
                 {/* <Route path="/inscribe" element={<Inscribe />} /> */}
                 <Route path="/mint" element={<Mint />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/example" element={<ExamplePage />} />
                 <Route path="/trade/:caddress" element={<TradeInfo />} />
                 <Route path="/" element={<Trade />} />
               </Routes>
