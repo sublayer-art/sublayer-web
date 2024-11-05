@@ -1,8 +1,12 @@
+import { NftExchange } from "@/contract/addresses";
 import { DetailModel } from "@/pages/trade-info/components/DetailModel/DetailModel";
 import { CollectionDTO } from "@/services/user";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React, { useCallback } from "react";
+import { useWriteContract } from "wagmi";
+import NFTExchangeAbi from "@/contract/abis/NftExchagne.json";
+import useToast from "@/hooks/useToast";
 
 const CollectionItem: React.FC<{
   data: CollectionDTO;
@@ -11,8 +15,48 @@ const CollectionItem: React.FC<{
 
   const metadata = JSON.parse(data.metadataContent);
   const isOnSell = data.items?.[0]?.onsell === true;
+  const item = data.items?.[0];
+  const toast = useToast();
 
-  const handleUnList = useCallback(() => {}, []);
+  const { writeContract } = useWriteContract();
+  const handleUnList = useCallback(() => {
+    if (!item) return;
+
+    const order = {
+      owner: item.itemOwner,
+      salt: "1",
+      sellAsset: {
+        token: item.address,
+        tokenId: BigInt(item.tokenId),
+        assetType: 3,
+      },
+      buyAsset: {
+        token: "0x0000000000000000000000000000000000000000",
+        tokenId: BigInt(1),
+        assetType: 0,
+      },
+    };
+
+    writeContract(
+      {
+        abi: NFTExchangeAbi,
+        address: NftExchange.darwinia,
+        functionName: "cancel",
+        args: [order],
+      },
+      {
+        onSettled(data, error, variables) {
+          console.log(data, error, variables);
+        },
+        onSuccess() {
+          toast.success("Unlist successful");
+        },
+        onError(error) {
+          toast.error(error.message);
+        },
+      }
+    );
+  }, [item, writeContract, toast]);
 
   return (
     <Card
@@ -96,17 +140,19 @@ const CollectionItem: React.FC<{
               pointerEvents: "auto",
             }}
           >
-            <Button
-              size="small"
-              variant="contained"
-              disableElevation
-              onClick={(e) => {
-                e.stopPropagation();
-                handleUnList();
-              }}
-            >
-              UnList
-            </Button>
+            {isOnSell && (
+              <Button
+                size="small"
+                variant="contained"
+                disableElevation
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUnList();
+                }}
+              >
+                UnList
+              </Button>
+            )}
           </Stack>
         </Stack>
       </Box>

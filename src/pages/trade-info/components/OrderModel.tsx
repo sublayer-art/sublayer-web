@@ -81,6 +81,12 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
       return {};
     }, [data]);
 
+    const disabledBuy = useMemo(() => {
+      if (itemOwner && address && itemOwner.toLowerCase() === address.toLowerCase()) return true;
+      return false;
+    }, [address, itemOwner]);
+    
+
     const { writeContract } = useWriteContract();
     const handleBuy = useCallback(
       async (nft: any) => {
@@ -137,7 +143,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
           setSubmitting(false);
         }
       },
-      [address, onSuccess, writeContract]
+      [address, onSuccess]
     );
 
     return (
@@ -266,6 +272,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
                       loading={submitting}
                       variant="contained"
                       type="submit"
+                      disabled={disabledBuy}
                     >
                       Buy
                     </LoadingButton>
