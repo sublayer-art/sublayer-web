@@ -58,7 +58,7 @@ export const DetailModel: React.FC<DetailModelProps> & {
               <Typography
                 component="a"
                 target="_blank"
-                href={`https://koi-scan.darwinia.network/address/${data.items?.[0]?.address}`}
+                href={`https://explorer.darwinia.network/address/${data.items?.[0]?.address}`}
                 sx={{
                   wordBreak: "break-all",
                   color: "primary.main",
@@ -77,7 +77,7 @@ export const DetailModel: React.FC<DetailModelProps> & {
               <Typography
                 component="a"
                 target="_blank"
-                href={`https://koi-scan.darwinia.network/address/${data.creator}`}
+                href={`https://explorer.darwinia.network/address/${data.creator}`}
                 sx={{
                   wordBreak: "break-all",
                   color: "primary.main",
@@ -96,7 +96,7 @@ export const DetailModel: React.FC<DetailModelProps> & {
               <Typography
                 component="a"
                 target="_blank"
-                href={`https://koi-scan.darwinia.network/address/${data.items?.[0]?.itemOwner}`}
+                href={`https://explorer.darwinia.network/address/${data.items?.[0]?.itemOwner}`}
                 sx={{
                   wordBreak: "break-all",
                   color: "primary.main",

@@ -21,19 +21,19 @@ const metadata = {
 };
 
 const darwinia = defineChain({
-  id: 701,
-  name: "Darwinia Koi Testnet",
+  id: 46,
+  name: "Darwinia",
   nativeCurrency: { name: "RING", symbol: "RING", decimals: 18 },
   rpcUrls: {
     default: {
-      http: ["https://koi-rpc.darwinia.network"],
+      http: ["https://rpc.darwinia.network"],
     },
   },
   blockExplorers: {
     default: {
-      name: 'KoiScan',
-      url: 'https://koi-scan.darwinia.network',
-      apiUrl: 'https://koi-scan.darwinia.network/api',
+      name: 'Scan',
+      url: 'https://explorer.darwinia.network',
+      apiUrl: 'https://explorer.darwinia.network/api',
     },
   },
   contracts: {
