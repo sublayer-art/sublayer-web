@@ -19,6 +19,7 @@ import DAPPService from "@/services/dapp";
 import NFTAbi from "@/contract/abis/NFT.json";
 import NFTService from "@/services/nft";
 import { LoadingButton } from "@mui/lab";
+import useToast from "@/hooks/useToast";
 
 const MintTable: React.FC = () => {
   const { data, loading } = useRequest(ContractService.listAll);
@@ -73,6 +74,7 @@ export default MintTable;
 
 function ITableRow({ data }: { data: ContractDTO }) {
   const { address } = useAccount();
+  const toast = useToast()
   const { writeContract } = useWriteContract();
   const [minting, setMinting] = useState(false);
   const handleMint = useCallback(
@@ -114,6 +116,9 @@ function ITableRow({ data }: { data: ContractDTO }) {
             onSettled(data, error, variables, context) {
               console.log({ data, error, variables, context });
               setMinting(false);
+            },
+            onSuccess() {
+              toast.success('mint successful!');
             },
           }
         );
