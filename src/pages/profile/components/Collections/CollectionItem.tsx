@@ -3,6 +3,11 @@ import { CollectionDTO } from "@/services/user";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React, { useCallback } from "react";
+import { useWriteContract } from "wagmi";
+import NFTExchangeAbi from "@/contract/abis/NftExchagne.json";
+import useToast from "@/hooks/useToast";
+import { NftExchange } from "@/contract/addresses";
+
 
 const CollectionItem: React.FC<{
   data: CollectionDTO;
@@ -13,26 +18,47 @@ const CollectionItem: React.FC<{
   const metadata = JSON.parse(data.metadataContent);
   const isOnSell = data.items?.[0]?.onsell === true;
   const item = data.items?.[0];
-  const handleUnList = useCallback(() => {
-    if(!item) return;
-    // writeContract(
-    //   {
-    //     abi: NFTExchangeAbi,
-    //     address: NftExchange.darwinia,
-    //     functionName: "cancel",
-    //     args: [
-    //       [
-    //         [
-    //           item.itemOwner, // owner
-    //           buyResult.salt, // salt
-    //           [buyResult.sellToken, Number(buyResult.sellTokenId), 3], // sellAsset
-    //           [buyResult.buyToken, Number(buyResult.buyTokenId), 0], // buyAsset
-    //         ], // key
-    //       ] // order
-    //     ],
-    //   })
 
-  }, [item]);
+  const toast = useToast();
+  const { writeContract } = useWriteContract();
+  const handleUnList = useCallback(() => {
+    if (!item) return;
+
+    const order = {
+      owner: item.itemOwner,
+      salt: "1",
+      sellAsset: {
+        token: item.address,
+        tokenId: BigInt(item.tokenId),
+        assetType: 3,
+      },
+      buyAsset: {
+        token: "0x0000000000000000000000000000000000000000",
+        tokenId: BigInt(1),
+        assetType: 0,
+      },
+    };
+
+    writeContract(
+      {
+        abi: NFTExchangeAbi,
+        address: NftExchange.darwinia,
+        functionName: "cancel",
+        args: [order],
+      },
+      {
+        onSettled(data, error, variables) {
+          console.log(data, error, variables);
+        },
+        onSuccess() {
+          toast.success("Unlist successful");
+        },
+        onError(error) {
+          toast.error(error.message);
+        },
+      }
+    );
+  }, [item, writeContract, toast]);
 
   return (
     <Card
@@ -87,7 +113,7 @@ const CollectionItem: React.FC<{
             minWidth: "3.5rem",
             px: 1,
             textAlign: "center",
-            zIndex:1
+            zIndex: 1,
           }}
         >
           on sell
