@@ -79,7 +79,7 @@ export default function Profile() {
                 }}
                 sx={{ px: 2 }}
               >
-                <Tab label="Collections" value="1" disableRipple />
+                <Tab label="My NFTs" value="1" disableRipple />
 
                 <Tab label="Listed" value="2" disableRipple />
                 <Tab label="Created" value="3" disableRipple />
