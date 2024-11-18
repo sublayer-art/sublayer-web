@@ -38,7 +38,8 @@ const ConnectWallet: React.FC = () => {
     if (address) {
       const domain = window.location.hostname;
       const nonce = Math.floor(Math.random() * 1e8);
-      const issuedAt = new Date().toISOString();
+      const timestamp = Date.now();
+      const issuedAt = new Date(timestamp).toISOString();
       const message = `${domain} wants you to sign in with your Ethereum account:\n${address}\n\nWelcome to SubLayer\n\nURI: https://${domain}\nVersion: 1\nChain ID: 46\nNonce: ${nonce}\nIssued At: ${issuedAt}`;
       console.log({ message });
       signMessageAsync({
@@ -49,7 +50,7 @@ const ConnectWallet: React.FC = () => {
           const loginResp = await UserService.loginWithSignature({
             userAddress: address,
             signature,
-            timestamp: Date.now(),
+            timestamp,
             nonce
           });
           setToken(loginResp.token);
