@@ -9,6 +9,7 @@ export default class UserService {
     userAddress: string;
     signature: string;
     timestamp: number;
+    nonce: number;
   }) {
     return Http.post("/user/login", data, {
       params: data,

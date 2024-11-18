@@ -50,6 +50,7 @@ const ConnectWallet: React.FC = () => {
             userAddress: address,
             signature,
             timestamp: Date.now(),
+            nonce
           });
           setToken(loginResp.token);
         } catch (error) {
