@@ -18,11 +18,12 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import UserService from "@/services/user";
 import useAuth from "@/store/auth";
+import useToast from "@/hooks/useToast";
 
 const ConnectWallet: React.FC = () => {
   const nav = useNavigate();
   const { token, setToken } = useAuth();
-  console.log({ token });
+  const toast = useToast();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
@@ -35,9 +36,14 @@ const ConnectWallet: React.FC = () => {
 
   useEffect(() => {
     if (address) {
+      const domain = window.location.hostname;
+      const nonce = Math.floor(Math.random() * 1e8);
+      const issuedAt = new Date().toISOString();
+      const message = `${domain} wants you to sign in with your Ethereum account:\n${address}\n\nWelcome to SubLayer\n\nURI: https://${domain}\nVersion: 1\nChain ID: 46\nNonce: ${nonce}\nIssued At: ${issuedAt}`;
+      console.log({ message });
       signMessageAsync({
         account: address,
-        message: "Welcome to SubLayer",
+        message,
       }).then(async (signature) => {
         try {
           const loginResp = await UserService.loginWithSignature({
@@ -47,6 +53,7 @@ const ConnectWallet: React.FC = () => {
           });
           setToken(loginResp.token);
         } catch (error) {
+          toast.error((error as Error).message || "Failed to login");
           disconnect();
         }
       });
