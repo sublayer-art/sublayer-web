@@ -22,9 +22,11 @@ export default function Profile() {
   const [showPanel, setShowPanel] = useState(false);
   const collectionReq = useRequest(UserService.collectionList, {
     manual: true,
+    pollingInterval: 5000
   });
   const listedReq = useRequest(UserService.onSales, {
     manual: true,
+    pollingInterval: 5000
   });
   const createdReq = useRequest(UserService.createdList, {
     manual: true,
