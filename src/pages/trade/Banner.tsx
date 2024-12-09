@@ -14,7 +14,7 @@ import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
 
-const items = ["/banner-2.png", "/banner-1.jpg"];
+const items = ["/banner-2.png", "/banner-1.png"];
 const Banner: React.FC = () => {
   function PrevArrow(props: any) {
     return (
