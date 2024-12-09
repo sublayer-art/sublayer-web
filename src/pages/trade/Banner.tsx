@@ -70,6 +70,8 @@ const Banner: React.FC = () => {
         infinite
         speed={500}
         arrows={!matchSM}
+        autoplay
+        autoplaySpeed={5000}
         prevArrow={<PrevArrow />}
         nextArrow={<NextArrow />}
         appendDots={(dots) => {
