@@ -129,17 +129,19 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
               onSuccess() {
                 toast.success("buy successful");
                 setIsOpen(false);
+                onSuccess?.();
+              },
+              onError(error) {
+                const { shortMessage, message = 'buy failed' } = error as any;
+                toast.error(shortMessage || message);
               },
               onSettled(...args) {
                 setSubmitting(false);
-                console.log({ ...args });
-                onSuccess?.();
               },
             }
           );
         } catch (error) {
           console.error(error);
-
           setSubmitting(false);
         }
       },

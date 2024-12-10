@@ -63,6 +63,8 @@ export default function TradeInfo() {
     max?: number;
   }>({});
 
+  const [trigger, setTrigger] = useState(0);
+
   const loadItems = useCallback(async () => {
     if (!caddress) {
       throw new Error("contract address can not be null");
@@ -112,7 +114,7 @@ export default function TradeInfo() {
       }));
       console.error(error);
     }
-  }, [caddress, txType, searchParams]);
+  }, [caddress, txType, trigger]);
 
   useEffect(() => {
     loadItems();
@@ -145,6 +147,23 @@ export default function TradeInfo() {
       buyState: tradeState.buy,
       sellState: tradeState.sell,
       loadItems,
+      refresh: () => {
+        setTradeState({
+          buy: {
+            items: [],
+            loading: false,
+            hasMore: true,
+            currentPage: 1,
+          },
+          sell: {
+            items: [],
+            loading: false,
+            hasMore: true,
+            currentPage: 1,
+          },
+        });
+        setTrigger((v) => v + 1);
+      },
     }),
     [data, txType, tradeState, loadItems]
   );
@@ -184,6 +203,7 @@ export default function TradeInfo() {
                   },
                 }));
                 setSearchParams(params);
+                setTrigger((v) => v + 1);
               }}
             />
           </Box>

@@ -16,6 +16,7 @@ interface CollectionTradeState {
   buyState: StateOfTransactionType;
   sellState: StateOfTransactionType;
   loadItems: () => Promise<void>;
+  refresh: () => void;
 }
 
 const CollectionTradeContext = createContext({} as CollectionTradeState);
