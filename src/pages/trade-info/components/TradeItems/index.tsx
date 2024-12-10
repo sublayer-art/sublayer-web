@@ -9,7 +9,7 @@ import OrderModel, { OrderModelRef } from "../OrderModel";
 
 const TradeItems: React.FC = () => {
   const orderModelRef = useRef<OrderModelRef>(null);
-  const { buyState, loadItems } = useCollectionTradeContext();
+  const { buyState, loadItems, refresh } = useCollectionTradeContext();
 
   const { items = [], loading, hasMore } = buyState;
 
@@ -33,7 +33,7 @@ const TradeItems: React.FC = () => {
   }
   return (
     <>
-      <OrderModel ref={orderModelRef} onSuccess={loadItems} />
+      <OrderModel ref={orderModelRef} onSuccess={refresh} />
       <ResponsiveGrid
         itemWidth={200}
         itemsCount={items.length}
