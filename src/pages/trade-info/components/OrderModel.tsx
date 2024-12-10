@@ -135,7 +135,7 @@ const OrderModel = forwardRef<OrderModelRef, OrderModelProps>(
                 const { shortMessage, message = 'buy failed' } = error as any;
                 toast.error(shortMessage || message);
               },
-              onSettled(...args) {
+              onSettled() {
                 setSubmitting(false);
               },
             }
