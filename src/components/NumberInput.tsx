@@ -1,17 +1,7 @@
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import { Button, Divider, Stack, SxProps } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
-const parseNumber = (value?: string, decimal = 0) => {
-  if (!value) return 0;
-  if (decimal > 0) {
-    const float = parseFloat(value);
-    if (isNaN(float)) return 0;
-    const v = 10 ** decimal;
-    return Math.round(float * v) / v;
-  }
-  return parseInt(value);
-};
 
 type NumberInputProps = {
   value?: number;
@@ -23,89 +13,104 @@ type NumberInputProps = {
   disabled?: boolean;
   decimal?: number;
   placeholder?: string;
+  name?: string;
 };
 
 const NumberInput: React.FC<NumberInputProps> = (props) => {
   const {
-    value,
+    value: propValue,
     onChange,
     sx,
     step = 1,
     min = 0,
-    max = 50,
+    max,
     disabled = false,
     decimal = 0,
     placeholder,
+    name
   } = props;
+
+  // 内部状态用于非受控模式，使用空字符串作为默认值
+  const [internalValue, setInternalValue] = useState<string | number>(propValue ?? '');
+  
+  // 使用 propValue 或 internalValue
+  const value = propValue ?? internalValue;
+
   if (decimal < 0) {
     throw Error("decimal must be greater than 0");
   }
 
-  const [inputValue, setInputValue] = useState("");
-
   const numberInRange = useCallback(
     (value: number) => {
-      if (max !== undefined || min != undefined) {
-        return Math.max(Math.min(value, max ?? 0), min ?? 0);
+      if (max !== undefined || min !== undefined) {
+        return Math.max(Math.min(value, max ?? Infinity), min ?? -Infinity);
       }
       return value;
     },
     [max, min]
   );
 
-  useEffect(() => {
-    if (value !== undefined) {
-      setInputValue((v) => {
-        if (parseNumber(v, decimal) !== value) {
-          return value.toString();
-        }
-        return v;
-      });
-    }
-  }, [decimal, value]);
-
-  const [triggerChange, setTriggerChange] = useState(0);
-
-  const onValueChange = useCallback(() => {
+  const handleValueChange = useCallback((newValue: string | number) => {
     if (onChange) {
-      let parsedNumber = parseNumber(inputValue, decimal);
-      if (parsedNumber !== value) {
-        parsedNumber = numberInRange(parsedNumber);
-        onChange(parsedNumber);
-      }
+      // 当传入onChange时，需要转换成数字
+      const numValue = typeof newValue === 'string' ? (newValue === '' ? 0 : parseFloat(newValue)) : newValue;
+      onChange(numValue);
+    } else {
+      setInternalValue(newValue);
     }
-  }, [decimal, inputValue, numberInRange, onChange, value]);
-
-  useEffect(() => {
-    if (triggerChange) {
-      onValueChange();
-    }
-  }, [triggerChange]);
-
-  const [disabledIncrease, setDisabledIncrease] = useState(false);
-  const [disabledReduce, setDisabledReduce] = useState(false);
-
-  useEffect(() => {
-    const v = value || 0;
-    setDisabledIncrease(v >= max);
-    setDisabledReduce(v <= 0);
-  }, [min, max, value]);
+  }, [onChange]);
 
   const increase = useCallback(() => {
-    const v = inputValue;
-    let num = parseNumber((+v + step) as unknown as string, decimal);
-    num = numberInRange(num);
-    setInputValue(num + "");
-    setTriggerChange((v) => v + 1);
-  }, [numberInRange, step, decimal, inputValue]);
+    const currentValue = value === '' ? 0 : Number(value);
+    const newValue = numberInRange(currentValue + step);
+    handleValueChange(newValue);
+  }, [numberInRange, step, value, handleValueChange]);
 
   const reduce = useCallback(() => {
-    const v = inputValue;
-    let num = parseNumber((+v - step) as unknown as string, decimal);
-    num = numberInRange(num);
-    setInputValue(num + "");
-    setTriggerChange((v) => v + 1);
-  }, [numberInRange, step, decimal, inputValue]);
+    const currentValue = value === '' ? 0 : Number(value);
+    const newValue = numberInRange(currentValue - step);
+    handleValueChange(newValue);
+  }, [numberInRange, step, value, handleValueChange]);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (inputValue === '') {
+      handleValueChange('');
+      return;
+    }
+    
+    if (inputValue === '00') {
+      handleValueChange('0');
+      return;
+    }
+    
+    if (decimal > 0 && inputValue === '.') {
+      handleValueChange('0.');
+      return;
+    }
+
+    const reg = decimal > 0
+      ? new RegExp(`^[+-]?(\\d+([.]\\d{0,${decimal}})?)$`)
+      : new RegExp(/^[+-]?(\d+)$/);
+
+    if (reg.test(inputValue)) {
+      handleValueChange(inputValue);
+    }
+  }, [decimal, handleValueChange]);
+
+  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (inputValue === '') {
+      handleValueChange('');
+      return;
+    }
+    const numValue = parseFloat(inputValue);
+    const newValue = numberInRange(numValue);
+    handleValueChange(newValue);
+  }, [numberInRange, handleValueChange]);
+
+  const disabledIncrease = value !== '' && max !== undefined && Number(value) >= max;
+  const disabledReduce = value !== '' && min !== undefined && Number(value) <= min;
 
   return (
     <Stack
@@ -144,37 +149,15 @@ const NumberInput: React.FC<NumberInputProps> = (props) => {
       })}
     >
       <input
-        value={inputValue}
+        value={value}
         inputMode="decimal"
+        name={name}
         type="text"
         pattern="[0-9]*(.[0-9]+)?"
         placeholder={placeholder}
         disabled={disabled}
-        onChange={(e) => {
-          const inputValue = e.target.value;
-          if (inputValue) {
-            if (inputValue === "00") {
-              setInputValue("0");
-            } else if (decimal > 0 && inputValue === ".") {
-              setInputValue("0.");
-            } else {
-              const reg =
-                decimal > 0
-                  ? new RegExp(`^[+-]?(\\d+([.]\\d{0,${decimal}})?)$`)
-                  : new RegExp(/^[+-]?(\d+)$/);
-              if (reg.test(inputValue)) {
-                setInputValue(inputValue);
-              }
-            }
-          } else {
-            setInputValue("");
-          }
-          setTriggerChange((v) => v + 1);
-        }}
-        onBlur={(e) => {
-          const inputValue = e.target.value;
-          setInputValue(numberInRange(+inputValue) + "");
-        }}
+        onChange={handleInputChange}
+        onBlur={handleBlur}
       />
 
       <Stack
@@ -205,4 +188,5 @@ const NumberInput: React.FC<NumberInputProps> = (props) => {
     </Stack>
   );
 };
+
 export default NumberInput;

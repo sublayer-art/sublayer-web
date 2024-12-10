@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import Filter from "./components/Filter";
 
 import Tab from "@mui/material/Tab";
@@ -7,11 +7,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import TradeItems from "./components/TradeItems";
 import InventoryItems from "./components/InventoryItems";
-import {
-  CollectionTradeContext,
-  StateOfTransactionType,
-  TransactionType,
-} from "./context";
+import { CollectionTradeContext, TransactionType } from "./context";
 
 import {
   Box,
@@ -44,102 +40,117 @@ export default function TradeInfo() {
   const [value, setValue] = React.useState("1");
   const [txType, setTxType] = useState<TransactionType>("buy");
 
-  const [buyState, setBuyState] = useState<StateOfTransactionType>({
-    items: [],
-    loading: true,
-    hasMore: true,
-    currentPage: 1,
-  });
-
-  const [sellState, setSellState] = useState<StateOfTransactionType>({
-    items: [],
-    loading: true,
-    hasMore: true,
-    currentPage: 1,
+  const [tradeState, setTradeState] = useState({
+    buy: {
+      items: [],
+      loading: false,
+      hasMore: true,
+      currentPage: 1,
+    },
+    sell: {
+      items: [],
+      loading: false,
+      hasMore: true,
+      currentPage: 1,
+    },
   });
 
   const buyStateReq = useRequest(ContractService.listItems, {
     manual: true,
   });
-
-  const reload = useCallback(async () => {
-    return new Promise<void>((resolve, reject) => {
-      if (!caddress) return reject("contract address can not be null");
-      if (txType === "buy") {
-        setBuyState((v) => ({ ...v, loading: true }));
-        buyStateReq
-          .runAsync({
-            address: caddress,
-            isSell: true,
-          })
-          .then(({ records }) => {
-            const hasMore = records.length === pageSize;
-            setBuyState((v) => ({
-              ...v,
-              items: records,
-              loading: false,
-              hasMore,
-            }));
-
-            resolve();
-          });
-      }
-    });
-  }, [caddress, txType]);
+  const [searchParams, setSearchParams] = useState<{
+    min?: number;
+    max?: number;
+  }>({});
 
   const loadItems = useCallback(async () => {
-    return new Promise<void>((resolve, reject) => {
-      if (!caddress) return reject("contract address can not be null");
-      if (txType === "buy") {
-        if (buyState.hasMore) {
-          const pageNumber = buyState.currentPage + 1;
-          setBuyState((v) => ({ ...v, loading: true, pageNumber }));
-          buyStateReq
-            .runAsync({
-              address: caddress,
-              isSell: true,
-            })
-            .then(({ records }) => {
-              const items: any[] = [];
-              items.push(...buyState.items);
-              const hasMore = records.length === pageSize;
-              setBuyState((v) => ({
-                ...v,
-                items: [...buyState.items, ...records],
-                loading: false,
-                hasMore,
-              }));
+    if (!caddress) {
+      throw new Error("contract address can not be null");
+    }
 
-              resolve();
-            });
-        }
-      }
-    });
-  }, [caddress, txType, buyState]);
+    const currentState = txType === "buy" ? tradeState.buy : tradeState.sell;
+    if (!currentState.hasMore || currentState.loading) {
+      return;
+    }
 
+    const pageNumber = currentState.currentPage + 1;
+
+    setTradeState((prev) => ({
+      ...prev,
+      [txType]: {
+        ...prev[txType],
+        loading: true,
+        pageNumber,
+      },
+    }));
+
+    try {
+      const { records } = await buyStateReq.runAsync({
+        address: caddress,
+        isSell: txType === "buy",
+        ...searchParams,
+      });
+
+      const hasMore = records.length === pageSize;
+
+      setTradeState((prev) => ({
+        ...prev,
+        [txType]: {
+          ...prev[txType],
+          items: [...prev[txType].items, ...records],
+          loading: false,
+          hasMore,
+        },
+      }));
+    } catch (error) {
+      setTradeState((prev) => ({
+        ...prev,
+        [txType]: {
+          ...prev[txType],
+          loading: false,
+        },
+      }));
+      console.error(error);
+    }
+  }, [caddress, txType, searchParams]);
 
   useEffect(() => {
-    reload();
-  }, []);
+    loadItems();
+  }, [loadItems]);
 
   const [showPanel, setShowPanel] = useState(false);
 
   const onTransactionTypeChange = (v: TransactionType) => {
     setTxType(v);
-    setSellState((v) => ({ ...v, selectedItems: [] }));
-    setBuyState((v) => ({ ...v, selectedItems: [] }));
+    setTradeState((v) => ({
+      ...v,
+      sell: {
+        ...v.sell,
+        selectedItems: [],
+      },
+    }));
+    setTradeState((v) => ({
+      ...v,
+      buy: {
+        ...v.buy,
+        selectedItems: [],
+      },
+    }));
   };
 
+  const contextValue = useMemo(
+    () => ({
+      collectionData: data,
+      transactionType: txType,
+      buyState: tradeState.buy,
+      sellState: tradeState.sell,
+      loadItems,
+    }),
+    [data, txType, tradeState, loadItems]
+  );
+
   return (
-    <CollectionTradeContext.Provider
-      value={{
-        collectionData: data,
-        transactionType: txType,
-        buyState,
-        sellState,
-        loadItems,
-      }}
-    >
+    <CollectionTradeContext.Provider value={contextValue}>
       <Stack direction="row" height="100%">
         <Hidden mdDown>
           <Box width={360} flexShrink={0}>
@@ -161,7 +172,20 @@ export default function TradeInfo() {
               </Tabs>
             </Box>
             <Divider />
-            <Filter />
+            <Filter
+              onFilter={(params) => {
+                setTradeState((v) => ({
+                  ...v,
+                  buy: {
+                    ...v.buy,
+                    items: [],
+                    currentPage: 1,
+                    hasMore: true,
+                  },
+                }));
+                setSearchParams(params);
+              }}
+            />
           </Box>
         </Hidden>
         <Divider orientation="vertical" />

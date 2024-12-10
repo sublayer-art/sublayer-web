@@ -1,6 +1,14 @@
 import NumberInput from "@/components/NumberInput";
-import { Box, MenuItem, Select, Stack, Typography } from "@mui/material";
-import React from "react";
+import { eth2Wei } from "@/tools/eth-tools";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
 
 const rarityOptions = [
   {
@@ -35,18 +43,49 @@ const rarityOptions = [
   },
 ];
 
-const Filter: React.FC = () => {
+const Filter: React.FC<{
+  onFilter?: (params: Record<string, any>) => void;
+}> = (props) => {
+  const { onFilter } = props;
+  const [searchParams, setSearchParams] = useState<{
+    min?: number;
+    max?: number;
+  }>({});
+
   return (
-    <Box p={2}>
+    <Box component="form" p={2}>
       <Typography variant="h6" fontWeight={700}>
         Filters
       </Typography>
       <Box mt={3}>
         <Typography mb={1.5}>Price Range</Typography>
         <Stack direction="row" alignItems="center">
-          <NumberInput decimal={2} placeholder="Min" min={0} />
+          <NumberInput
+            decimal={2}
+            name="min"
+            placeholder="Min"
+            min={0}
+            value={searchParams.min}
+            onChange={(value) => {
+              setSearchParams({
+                ...searchParams,
+                min: value,
+              });
+            }}
+          />
           <Box mx={2} width={16} height="2px" bgcolor="#747f8b" />
-          <NumberInput decimal={2} placeholder="Max" />
+          <NumberInput
+            decimal={2}
+            name="max"
+            placeholder="Max"
+            value={searchParams.max}
+            onChange={(value) => {
+              setSearchParams({
+                ...searchParams,
+                max: value,
+              });
+            }}
+          />
         </Stack>
       </Box>
       <Box mt={3}>
@@ -117,6 +156,30 @@ const Filter: React.FC = () => {
           })}
         </Select>
       </Box>
+      <Stack mt={10} direction="row" spacing={2}>
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={() => {
+            setSearchParams({});
+            onFilter?.({});
+          }}
+        >
+          Reset
+        </Button>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => {
+            onFilter?.({
+              min: searchParams.min ? eth2Wei(searchParams.min) : undefined,
+              max: searchParams.max ? eth2Wei(searchParams.max) : undefined,
+            });
+          }}
+        >
+          Search
+        </Button>
+      </Stack>
     </Box>
   );
 };
