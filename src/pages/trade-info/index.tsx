@@ -245,9 +245,9 @@ export default function TradeInfo() {
             <Hidden mdUp>
               <Paper
                 sx={{
-                  height: 420,
+                  height: 460,
                   position: "fixed",
-                  bottom: showPanel ? 0 : -348,
+                  bottom: showPanel ? 0 : -388,
                   width: "100vw",
                   transition: "bottom 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
                 }}
