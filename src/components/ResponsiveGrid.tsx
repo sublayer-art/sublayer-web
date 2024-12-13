@@ -101,7 +101,7 @@ const ResponsiveGrid: React.FC<{
               columnCount={columnCount}
               columnWidth={columnWidth}
               rowCount={rowCount}
-              rowHeight={columnWidth / 0.95 + 76}
+              rowHeight={columnWidth / 0.75 + 76}
               useIsScrolling
               onItemsRendered={(props: any) => {
                 if (props.visibleRowStopIndex === rowCount - 1) {

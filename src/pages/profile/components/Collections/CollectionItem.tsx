@@ -173,7 +173,7 @@ const CollectionItem: React.FC<{
 
       <Box
         sx={{
-          aspectRatio: 0.95,
+          aspectRatio: 0.75,
           width: "100%",
           height: "auto",
           position: "relative",
@@ -186,6 +186,7 @@ const CollectionItem: React.FC<{
             width: "100%",
             height: "100%",
             display: "block",
+            objectFit: "contain",
           }}
         />
         <Box className="img-mask"></Box>

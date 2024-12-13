@@ -1,8 +1,15 @@
-import { Box, Stack, Typography } from "@mui/material";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FormItemContext } from "./FormItem";
 import FormContext from "./context";
 import { getIn } from "formik";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
 const FormUpload: React.FC<UploadProps> = ({ ...resetProps }) => {
   const formik = useContext(FormContext);
@@ -11,9 +18,8 @@ const FormUpload: React.FC<UploadProps> = ({ ...resetProps }) => {
   return (
     <Upload
       {...resetProps}
-      onChange={(file) => {
-        console.log('file change:',file)
-        formik.setFieldValue(name, file);
+      onChange={(files) => {
+        formik.setFieldValue(name, files);
       }}
       name={name}
       disabled={disabled}
@@ -24,22 +30,49 @@ const FormUpload: React.FC<UploadProps> = ({ ...resetProps }) => {
 export default FormUpload;
 
 type UploadProps = {
-  onChange?: (file: File) => void;
+  onChange?: (files: File[]) => void;
   value?: string | string[];
+  multiple?: boolean;
   disabled?: boolean;
   name?: string;
 };
 
 function Upload(props: UploadProps) {
-  const { name, onChange, disabled } = props;
-  const [file, setFile] = useState<File>();
+  const { name, onChange, multiple, disabled } = props;
+  const [files, setFiles] = useState<File[]>([]);
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (file) {
-      onChange?.(file);
+    if (onChange) {
+      onChange(files);
     }
-  }, [file]);
+  }, [files]);
+
+  const updateInputFileList = useCallback(() => {
+    if (ref.current) {
+      const dataTransfer = new DataTransfer();
+      files.forEach((file) => {
+        dataTransfer.items.add(file);
+      });
+
+      ref.current.files = dataTransfer.files;
+    }
+  }, [files]);
+
+  useEffect(() => {
+    updateInputFileList();
+  }, [updateInputFileList]);
+
+  const appendFiles = useCallback(
+    (newFiles: File[]) => {
+      if (multiple) {
+        setFiles((files) => [...files, ...newFiles]);
+      } else if (newFiles.length > 0) {
+        setFiles([newFiles[0]]);
+      }
+    },
+    [multiple]
+  );
 
   const dropRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -52,8 +85,9 @@ function Upload(props: UploadProps) {
 
     function handleDrop(e: DragEvent) {
       const dt = e.dataTransfer;
-      if (dt && dt.files.length > 0) {
-        setFile(dt.files[0]);
+      if (dt) {
+        const dtFiles = dt.files;
+        appendFiles(Array.from(dtFiles || []));
       }
     }
     if (dropArea) {
@@ -74,7 +108,7 @@ function Upload(props: UploadProps) {
         dropArea.removeEventListener("drop", handleDrop, false);
       };
     }
-  }, []);
+  }, [appendFiles]);
 
   return (
     <Box>
@@ -102,10 +136,10 @@ function Upload(props: UploadProps) {
           disabled={disabled}
           type="file"
           ref={ref}
-          multiple={false}
+          multiple={multiple}
           style={{ display: "none" }}
           onChange={(e) => {
-            setFile(e.target.files?.[0]);
+            appendFiles(Array.from(e.target.files || []));
           }}
         />
         <Stack alignItems="center">
@@ -143,13 +177,61 @@ function Upload(props: UploadProps) {
           </svg>
 
           <Typography mt={1}>
-            Upload your file here or click to select file
+            Upload your files here or click to select files
           </Typography>
           <Typography variant="caption" color="rgb(183, 183, 183)">
-            .jpg .webp .png .gif and more
+            .jpg .webp .png .gif .txt .mp3 .mp4 and more
           </Typography>
         </Stack>
       </Box>
+      {multiple &&
+        files.map((file, index) => {
+          return (
+            <Box
+              key={index}
+              sx={{
+                borderRadius: 1,
+                border: "solid 1px",
+                borderColor: "primary.main",
+                pl: 2,
+                pr: 0.5,
+                mt: 1,
+                py: 0.5,
+              }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{
+                  overflow: "hidden",
+                }}
+              >
+                <Typography
+                  color="primary"
+                  flex={1}
+                  textOverflow="ellipsis"
+                  overflow="hidden"
+                  whiteSpace="nowrap"
+                >
+                  {file.name}
+                </Typography>
+                <IconButton
+                  size="small"
+                  sx={{ flexShrink: 0 }}
+                  onClick={() => {
+                    setFiles((files) => {
+                      files.splice(index, 1);
+                      const newFiles = [...files];
+                      return newFiles;
+                    });
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              </Stack>
+            </Box>
+          );
+        })}
     </Box>
   );
 }

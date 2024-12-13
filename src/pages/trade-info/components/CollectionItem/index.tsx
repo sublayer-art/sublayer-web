@@ -93,7 +93,7 @@ const CollectionItem: React.FC<{
 
       <Box
         sx={{
-          aspectRatio: 0.95,
+          aspectRatio: 0.75,
           width: "100%",
           height: "auto",
           position: "relative",

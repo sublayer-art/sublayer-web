@@ -10,6 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
@@ -123,6 +124,7 @@ const Banner: React.FC = () => {
 export default Banner;
 
 function Item(props: { image: string }) {
+  const navigate = useNavigate();
   return (
     <Box position="relative" width="100%" height="100%">
       {/* 背景 */}
@@ -184,6 +186,9 @@ function Item(props: { image: string }) {
               height: [32, 38, 48],
               px: [1, 1.5, 3],
               fontSize: [12, 14, 16],
+            }}
+            onClick={() => {
+              navigate("/launchpad");
             }}
           >
             TO LAUNCHPAD

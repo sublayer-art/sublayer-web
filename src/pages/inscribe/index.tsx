@@ -2,61 +2,119 @@ import Center from "@/components/Center";
 import Form from "@/components/Form";
 import FormInput from "@/components/Form/FormInput";
 import FormItem from "@/components/Form/FormItem";
-import FormUpload from "@/components/Form/FormUpload";
-import { ERC721RaribleFactoryC2Abi } from "@/contract/abis/ERC721RaribleFactoryC2";
-import { ERC721RaribleFactoryC2Address } from "@/contract/addresses";
+import FormUpload from "./FormUpload";
+import useAuth from "@/store/auth";
 import { colorWithOpacity } from "@/tools/style";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useCallback, useState } from "react";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
-
-const unifiGamesArgs = [
-  "unifi-games-test",
-  "UGT",
-  "ipfs://",
-  "ipfs://QmQGh5symCyvr5zY91KGMRK4B29uXetLv681Bocaqjpe2D/0",
-  [],
-  [],
-];
+import { useCallback, useEffect, useState } from "react";
+import {
+  useAccount,
+  useDeployContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import bytecode from "./bytecode";
+import abi from "./abi.json";
+import Http from "@/tools/http";
+import useToast from "@/hooks/useToast";
+import { useNavigate } from "react-router-dom";
 
 export default function Inscribe() {
+  const navigate = useNavigate();
   const { isConnected } = useAccount();
   const { open } = useWeb3Modal();
-  const getAddressResult = useReadContract({
-    abi: ERC721RaribleFactoryC2Abi,
-    address: ERC721RaribleFactoryC2Address.sepolia,
-    functionName: "getAddress",
-    args: unifiGamesArgs,
+  const { token } = useAuth();
+  const toast = useToast();
+  // https://wagmi.sh/react/api/hooks/useDeployContract
+  const { deployContract } = useDeployContract();
+
+  const signer = "0x8aab0d36dd9DD45ABCFeBd26C15735c08D0ee775";
+  const [submitting, setSubmitting] = useState(false);
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const [formData, setFormData] = useState<Record<string, any>>();
+  const [file, setFile] = useState<Record<string, any>>();
+
+  const [contractAddress, setContractAddress] = useState<
+    `0x${string}` | undefined
+  >(undefined);
+  const result = useWaitForTransactionReceipt({
+    hash: txHash,
   });
-  const { writeContract } = useWriteContract();
-  console.log({ getAddressResult });
-  const [submitting] = useState(false);
+  const { address } = useAccount();
 
-  const handleSubmit = useCallback(() => {
-    writeContract(
-      {
-        abi: ERC721RaribleFactoryC2Abi,
-        address: ERC721RaribleFactoryC2Address.sepolia,
-        functionName: "createToken",
-        args: unifiGamesArgs,
-      },
-      {
-        onError(error, variables, context) {
-          console.log({ error, variables, context });
-        },
-        onSuccess(data, variables, context) {
-          console.log({ data, variables, context });
-        },
-        onSettled(data, error, variables, context) {
-          console.log({ data, error, variables, context });
-        },
+  console.log("Receipt result", result.data, result);
+  const [createLoading, setCreateLoading] = useState(false);
+
+  useEffect(() => {
+    if (result.data && result.data.contractAddress) {
+      setContractAddress(result.data.contractAddress);
+      setTxHash(undefined);
+    }
+  }, [result.data]);
+
+  useEffect(() => {
+    if (createLoading || !contractAddress || !file || !formData) return;
+    const { name, symbol, supply } = formData;
+    setCreateLoading(true);
+    const params = {
+      name,
+      symbol,
+      supply,
+      signer,
+      address: contractAddress,
+      cover: file.url,
+      coverIpfs: file.ipfshash,
+      storageId: file.id,
+      owner: address,
+    };
+    Http.post("/contract/create", null, { params })
+      .then(() => {
+        toast.success("Create NFT Collection Success");
+        setContractAddress(undefined);
+        navigate("/");
+      })
+      .catch((error) => {
+        toast.error(error.message || "Create NFT Collection Failed");
+      })
+      .finally(() => {
+        setCreateLoading(false);
+        setSubmitting(false);
+      });
+  }, [formData, createLoading, address, toast, file, contractAddress, navigate]);
+
+  const handleDeploy = useCallback(
+    async (values: any) => {
+      if (submitting) return;
+      if (!file) {
+        toast.error("Please upload file");
+        return;
       }
-    );
-  }, [writeContract]);
+      const { name, symbol, supply } = values;
+      setSubmitting(true);
+      setFormData(values);
+      deployContract(
+        {
+          abi: abi,
+          bytecode: `0x${bytecode}`,
+          args: [name, symbol, supply, signer],
+        },
+        {
+          onSuccess(data, variables, context) {
+            console.log("deploy success", { data, variables, context });
+            setTxHash(data);
+          },
+          onError(error, variables, context) {
+            console.log("deploy error", { error, variables, context });
+            setSubmitting(false);
+          },
+        }
+      );
+    },
+    [deployContract, file, submitting, toast]
+  );
 
-  if (!isConnected) {
+  if (!token && !isConnected) {
     return (
       <Center sx={{ height: "100%" }}>
         <Button
@@ -88,7 +146,7 @@ export default function Inscribe() {
             fontWeight={700}
             textAlign="center"
           >
-            Create NFT
+            Launchpad
           </Typography>
         </Box>
         <Box
@@ -111,26 +169,24 @@ export default function Inscribe() {
             })}
           >
             <Form
-              onSubmit={async () => {
-                handleSubmit();
-              }}
+              onSubmit={handleDeploy}
               initialValues={{
-                tick: "",
-                amount: "",
-                price: "",
-                files: "",
+                name: "",
+                symbol: "",
+                supply: "",
+                file: "",
               }}
             >
-              <FormItem label="Upload Files" name="files" required>
-                <FormUpload />
+              <FormItem label="Upload File" name="file">
+                <FormUpload onChange={setFile} />
               </FormItem>
-              <FormItem label="Tick" name="tick" required>
+              <FormItem label="Name" name="name" required>
                 <FormInput placeholder="please enter" />
               </FormItem>
-              <FormItem label="Amount" name="amount" required>
+              <FormItem label="Symbol" name="symbol" required>
                 <FormInput placeholder="please enter" />
               </FormItem>
-              <FormItem label="Price(BTC)" name="price" required>
+              <FormItem label="Supply" name="supply" required>
                 <FormInput placeholder="please enter" />
               </FormItem>
 
@@ -140,7 +196,7 @@ export default function Inscribe() {
                 type="submit"
                 loading={submitting}
               >
-                Submit
+                Deploy
               </LoadingButton>
             </Form>
           </Box>

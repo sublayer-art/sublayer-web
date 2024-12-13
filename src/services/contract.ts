@@ -90,6 +90,7 @@ export type ContractDTO = {
   bannerUrl: null;
   getInfoTimes: 4;
   isRoyalties: false;
+  supply: number;
   signer: "0x8aab0d36dd9DD45ABCFeBd26C15735c08D0ee775";
   isSync: false;
 };

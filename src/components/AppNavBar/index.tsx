@@ -12,7 +12,6 @@ const AppNavBar: React.FC = () => {
           <Box m="auto" flexShrink={0}>
             <Stack direction="row" alignItems="center">
               <picture>
-                {/* <source media="(min-width: 900px)" srcSet="/logo.png" /> */}
                 <img
                   alt="logo"
                   height={32}
@@ -40,7 +39,6 @@ function NavList() {
   ];
 
   const location = useLocation();
-  console.log({ location });
 
   return (
     <Box

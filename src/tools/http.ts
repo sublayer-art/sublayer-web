@@ -75,6 +75,7 @@ axiosInst.interceptors.response.use(
   }
 );
 
+export { axiosInst };
 /**
  * 封装一层axios，以获得更好的ts类型推断
  *

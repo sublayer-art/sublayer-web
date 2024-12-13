@@ -80,12 +80,18 @@ const TradeTable: React.FC = () => {
                 </TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center">
-                    <img src={row.cover!} height={60} alt="name" />
+                    <img
+                      src={row.cover!}
+                      alt="name"
+                      style={{ width: 60, height: 60, objectFit: "contain" }}
+                    />
                     <Typography ml={2}>{row.name}</Typography>
                   </Stack>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography color="primary.main">{row.price ? `${wei2Eth(BigInt(row.price))} RING` :  '-'}</Typography>
+                  <Typography color="primary.main">
+                    {row.price ? `${wei2Eth(BigInt(row.price))} RING` : "-"}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">{row.saleCount}</TableCell>
                 <TableCell align="center">{row.collectionCount}</TableCell>

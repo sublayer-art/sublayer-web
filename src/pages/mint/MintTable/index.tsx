@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import {
   CircularProgress,
+  LinearProgress,
   Stack,
   Table,
   TableBody,
@@ -74,7 +75,7 @@ export default MintTable;
 
 function ITableRow({ data }: { data: ContractDTO }) {
   const { address } = useAccount();
-  const toast = useToast()
+  const toast = useToast();
   const { writeContract } = useWriteContract();
   const [minting, setMinting] = useState(false);
   const handleMint = useCallback(
@@ -118,7 +119,7 @@ function ITableRow({ data }: { data: ContractDTO }) {
               setMinting(false);
             },
             onSuccess() {
-              toast.success('mint successful!');
+              toast.success("mint successful!");
             },
           }
         );
@@ -129,20 +130,54 @@ function ITableRow({ data }: { data: ContractDTO }) {
     [writeContract, address]
   );
 
+  const supply = data.supply || 0;
+  const minted = data.collectionCount || 0;
+
   return (
     <TableRow hover>
       <TableCell>
         <Stack direction="row" alignItems="center">
-          <img src={data.cover!} height={60} alt="name" />
+          <img
+            src={data.cover!}
+            height={60}
+            alt="name"
+            style={{ width: 60, height: 60, objectFit: "contain" }}
+          />
           <Typography ml={2}>{data.name}</Typography>
         </Stack>
       </TableCell>
       <TableCell align="center">
-        <Typography color="primary.main">
+        <Typography>
           {new Date(data.createTime).toLocaleDateString()}
         </Typography>
       </TableCell>
-      <TableCell align="center">{data.collectionCount || 0}</TableCell>
+      <TableCell align="center">
+        <Stack alignItems="center">
+          <div style={{ position: "relative" }}>
+            <LinearProgress
+              variant="determinate"
+              color="inherit"
+              value={(minted / supply) * 100}
+              sx={{ width: 120, height: 14 }}
+            />
+            <Typography
+              position="absolute"
+              top={0}
+              left={0}
+              right={0}
+              bottom={0}
+              color="white"
+              fontSize={12}
+              lineHeight={'14px'}
+            >
+              {Math.round(minted / supply * 10000) / 100} %
+            </Typography>
+          </div>
+          <Typography color="primary.main" mt={0.5}>
+            {minted}/<span style={{ color: "white" }}>{supply}</span>
+          </Typography>
+        </Stack>
+      </TableCell>
       <TableCell align="center">0 RING</TableCell>
       <TableCell align="center">
         <LoadingButton

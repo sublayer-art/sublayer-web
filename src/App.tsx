@@ -8,6 +8,7 @@ import Mint from "./pages/mint";
 import Profile from "./pages/profile";
 import TradeInfo from "./pages/trade-info";
 import Trade from "./pages/trade";
+import Inscribe from "./pages/inscribe";
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
               }
             >
               <Routes>
-                {/* <Route path="/inscribe" element={<Inscribe />} /> */}
+                <Route path="/launchpad" element={<Inscribe />} />
                 <Route path="/mint" element={<Mint />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/trade/:caddress" element={<TradeInfo />} />
