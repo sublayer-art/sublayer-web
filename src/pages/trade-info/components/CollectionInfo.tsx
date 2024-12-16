@@ -12,42 +12,60 @@ const CollectionInfo: React.FC = () => {
     <Box sx={{ px: 4, py: 2, width: "100%" }} className="scroll">
       <Stack direction="row">
         <Stack direction="row" alignItems="center" mr={2} minWidth={280}>
-          {collectionData ? (
-            <img src={collectionData.cover} height={60} />
-          ) : (
-            <Skeleton width={60} height={60} />
-          )}
-          {collectionData ? (
-            <>
-              <IconButton disableRipple onClick={() => setFavorite((v) => !v)}>
-                {favorite ? (
-                  <StarRounded color="primary" />
-                ) : (
-                  <StarBorderRounded />
-                )}
-              </IconButton>
-              <Typography noWrap>{collectionData.name}</Typography>
-            </>
-          ) : (
-            <Skeleton height={28} sx={{ mx: 2, flex: 1 }} />
-          )}
+          <Box width={60} height={60} flexShrink={0}>
+            {collectionData ? (
+              <img
+                src={collectionData.cover}
+                style={{ width: 60, height: 60, objectFit: "contain" }}
+              />
+            ) : (
+              <Skeleton width={60} height={60} />
+            )}
+          </Box>
+          <Stack height="100%">
+            <Stack direction="row" alignItems="center">
+              {collectionData ? (
+                <>
+                  <IconButton onClick={() => setFavorite((v) => !v)}>
+                    {favorite ? (
+                      <StarRounded color="primary" />
+                    ) : (
+                      <StarBorderRounded />
+                    )}
+                  </IconButton>
+                  <Typography noWrap>{collectionData.name}</Typography>
+                </>
+              ) : (
+                <Skeleton height={32} width={100} sx={{ mx: 1, my: 1 }} />
+              )}
+            </Stack>
+
+            <Box mt="auto" ml={1}>
+              <Typography fontSize={12} style={{ wordBreak: "break-all" }}>
+                {collectionData?.address}
+              </Typography>
+            </Box>
+          </Stack>
         </Stack>
         <Stat
           name="Floor"
           loading={!collectionData}
           value={
             <Box component={"span"} color="primary.main">
-              {collectionData?.price ? `${wei2Eth(BigInt(collectionData.price))} RING` :  '-'}
+              {collectionData?.price
+                ? `${wei2Eth(BigInt(collectionData.price))} RING`
+                : "-"}
             </Box>
           }
         />
-        <Stat name="Listed/Total" loading={!collectionData} value={`${collectionData?.saleCount ??0}/${collectionData?.collectionCount ?? 0}`} />
+        <Stat
+          name="Listed/Total"
+          loading={!collectionData}
+          value={`${collectionData?.saleCount ?? 0}/${
+            collectionData?.collectionCount ?? 0
+          }`}
+        />
       </Stack>
-      <Box mt={1} maxWidth={280}>
-        <Typography fontSize={14} style={{ wordBreak: "break-all" }}>
-          {collectionData?.address}
-        </Typography>
-      </Box>
     </Box>
   );
 };

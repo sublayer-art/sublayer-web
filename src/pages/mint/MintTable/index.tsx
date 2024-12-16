@@ -166,7 +166,7 @@ function ITableRow({ data }: { data: ContractDTO }) {
               left={0}
               right={0}
               bottom={0}
-              color="white"
+              color="black"
               fontSize={12}
               lineHeight={'14px'}
             >
@@ -184,6 +184,7 @@ function ITableRow({ data }: { data: ContractDTO }) {
           variant="contained"
           size="small"
           loading={minting}
+          disabled={minting || minted >= supply}
           onClick={() => handleMint(data)}
         >
           Mint
