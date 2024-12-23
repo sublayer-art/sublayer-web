@@ -26,10 +26,13 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import Spacer from "@/components/Spacer";
 import CustomTab from "@/components/CustomTab";
 import ContractService, { ContractDTO } from "@/services/contract";
+import UserService from "@/services/user";
+import { useAccount } from "wagmi";
 
 export default function TradeInfo() {
   const { caddress } = useParams();
   const pageSize = 1000;
+  const { address } = useAccount();
 
   const req = useRequest(ContractService.info, {
     defaultParams: [caddress!],
@@ -56,6 +59,10 @@ export default function TradeInfo() {
   });
 
   const buyStateReq = useRequest(ContractService.listItems, {
+    manual: true,
+  });
+
+  const sellStateReq = useRequest(UserService.collectionList, {
     manual: true,
   });
   const [searchParams, setSearchParams] = useState<{
@@ -87,12 +94,18 @@ export default function TradeInfo() {
     }));
 
     try {
-      const { records } = await buyStateReq.runAsync({
-        address: caddress,
-        isSell: txType === "buy",
-        ...searchParams,
-      });
-
+      const { records } =
+        txType === "buy"
+          ? await buyStateReq.runAsync({
+              address: caddress,
+              isSell: true,
+              ...searchParams,
+            })
+          : await sellStateReq.runAsync({
+              address: address!,
+              token: caddress,
+              ...searchParams,
+            });
       const hasMore = records.length === pageSize;
 
       setTradeState((prev) => ({
@@ -114,7 +127,7 @@ export default function TradeInfo() {
       }));
       console.error(error);
     }
-  }, [caddress, txType, trigger]);
+  }, [caddress, address, txType, trigger]);
 
   useEffect(() => {
     loadItems();

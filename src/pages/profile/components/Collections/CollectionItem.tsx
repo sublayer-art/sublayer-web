@@ -1,5 +1,4 @@
 import { DetailModel } from "@/pages/trade-info/components/DetailModel/DetailModel";
-import { CollectionDTO } from "@/services/user";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React, { useCallback } from "react";
@@ -7,10 +6,10 @@ import { useWriteContract } from "wagmi";
 import NFTExchangeAbi from "@/contract/abis/NftExchagne.json";
 import useToast from "@/hooks/useToast";
 import { NftExchange } from "@/contract/addresses";
-
+import { ContractItemDTO } from "@/services/contract";
 
 const CollectionItem: React.FC<{
-  data: CollectionDTO;
+  data: ContractItemDTO;
   onList: VoidFunction;
 }> = ({ data, onList }) => {
   const hoverBGColor = "rgba(116, 127, 139, 0.42)";

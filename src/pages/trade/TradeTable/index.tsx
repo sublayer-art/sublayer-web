@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   CircularProgress,
   Stack,
   Table,
@@ -25,6 +26,10 @@ const TradeTable: React.FC = () => {
 
   const { data, loading } = useRequest(ContractService.listAll);
   const { records = [] } = data || {};
+
+  const handleToTrade = (row: any) => {
+    nav("/trade/" + row.address, { state: { data: row } });
+  };
 
   return (
     <TableContainer>
@@ -55,18 +60,13 @@ const TradeTable: React.FC = () => {
             <TableCell align="center">Floor</TableCell>
             <TableCell align="center">Listed</TableCell>
             <TableCell align="center">Total</TableCell>
+            <TableCell align="center"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {records.map((row, index) => {
             return (
-              <TableRow
-                hover
-                key={index}
-                onClick={() => {
-                  nav("/trade/" + row.address, { state: { data: row } });
-                }}
-              >
+              <TableRow hover key={index} onClick={() => handleToTrade(row)}>
                 <TableCell>
                   <Stack direction="row">
                     <StarOutlineRoundedIcon name="star" />
@@ -95,6 +95,15 @@ const TradeTable: React.FC = () => {
                 </TableCell>
                 <TableCell align="center">{row.saleCount}</TableCell>
                 <TableCell align="center">{row.collectionCount}</TableCell>
+                <TableCell align="center">
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => handleToTrade(row)}
+                  >
+                    Trade
+                  </Button>
+                </TableCell>
               </TableRow>
             );
           })}

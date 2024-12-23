@@ -15,7 +15,21 @@ import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
 
-const items = [ "/banner-1.png","/banner-2.png"];
+const items = ["/banner-1.png", "/banner-2.png"];
+const items2 = [
+  {
+    title: `ASSASSINS SERIES
+CHINESE ZODIAC`,
+    subtitle: `Buy the first issue of SubLayer’s assassins series Zodiac Animals.`,
+    src: "/banner-1.png",
+  },
+  {
+    title: `MECH SERIES
+RAIDER`,
+    subtitle: `Buy the first issue of SubLayer’s Mech series RAIDER.`,
+    src: "/banner-2.png",
+  },
+];
 const Banner: React.FC = () => {
   function PrevArrow(props: any) {
     return (
@@ -114,8 +128,8 @@ const Banner: React.FC = () => {
           );
         }}
       >
-        {items.map((item, index) => (
-          <Item image={item} key={index} />
+        {items2.map((item, index) => (
+          <Item data={item} key={index} />
         ))}
       </Slider>
     </Box>
@@ -123,7 +137,11 @@ const Banner: React.FC = () => {
 };
 export default Banner;
 
-function Item(props: { image: string }) {
+function Item({
+  data,
+}: {
+  data: { title: string; subtitle: string; src: string };
+}) {
   const navigate = useNavigate();
   return (
     <Box position="relative" width="100%" height="100%">
@@ -131,7 +149,7 @@ function Item(props: { image: string }) {
       <Box
         position="absolute"
         style={{
-          backgroundImage: `url(${props.image})`,
+          backgroundImage: `url(${data.src})`,
           zIndex: -1,
           top: 0,
           left: 0,
@@ -165,7 +183,7 @@ function Item(props: { image: string }) {
           fontWeight="bold"
           lineHeight={1.2}
         >
-          Liberty Square Originz: Embers
+          {data.title}
         </Typography>
         <Hidden smDown>
           <Typography
@@ -174,8 +192,7 @@ function Item(props: { image: string }) {
             lineHeight={1.2}
             sx={{ mt: 1 }}
           >
-            Buy the first issue of Liberty Square’s gritty comic series Originz:
-            Embers.
+            {data.subtitle}
           </Typography>
         </Hidden>
 

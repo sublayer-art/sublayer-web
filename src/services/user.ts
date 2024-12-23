@@ -24,7 +24,7 @@ export default class UserService {
   }) {
     return Http.post<PaginateData<any>>("/user/nftlist", {}, { params });
   }
-  static collectionList(params: { address: string }) {
+  static collectionList(params: { address: string; token?: string }) {
     return Http.post<PaginateData<CollectionDTO>>("/user/collections", null, {
       params,
     });
