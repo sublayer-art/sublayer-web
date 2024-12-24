@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { toast } from "sonner";
 
 export type PaginateData<T = unknown> = {
   records: Array<T>;
@@ -49,17 +50,16 @@ axiosInst.interceptors.response.use(
       return response.data;
     }
     const { code, data, msg } = response.data;
-
+    const errorMessage = msg || "业务异常，状态码:" + code;
     if (code === 200) {
       return data;
     } else {
-      const errorMessage = msg || "业务异常，状态码:" + code;
       console.error(errorMessage);
+      toast.error(errorMessage);
+      if (code === 501) {
+        document.dispatchEvent(new Event("logout"));
+      }
       throw Error(errorMessage);
-      // errorToast.toast({
-      //   title: code,
-      //   description: errorMessage,
-      // });
     }
   },
   (error) => {

@@ -6,9 +6,13 @@ import Spacer from "../Spacer";
 
 const AppNavBar: React.FC = () => {
   return (
-    <Box height={48} py={1} px={2} bgcolor="#222222" color="#fcfcfc">
-      <Stack direction="row" height="100%">
-        <Link to="/" style={{ textDecoration: "unset" }}>
+    <Box py={1} px={2} bgcolor="#222222" color="#fcfcfc">
+      <Stack direction="row" height="100%" flexWrap={["wrap", 'wrap', 'nowrap']}>
+        <Box
+          component={Link}
+          to="/"
+          sx={{ textDecoration: "unset", flex: [1, 1, "unset"] }}
+        >
           <Box m="auto" flexShrink={0}>
             <Stack direction="row" alignItems="center">
               <picture>
@@ -21,7 +25,7 @@ const AppNavBar: React.FC = () => {
               </picture>
             </Stack>
           </Box>
-        </Link>
+        </Box>
         <Spacer />
         <NavList />
         <ConnectWallet />
@@ -49,6 +53,8 @@ function NavList() {
         alignItems: "center",
         margin: 0,
         padding: 0,
+        order: [2, 2, "unset"],
+        width: ["100%", "100%", "unset"],
         li: {
           mr: 4,
           a: {

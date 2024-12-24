@@ -30,6 +30,7 @@
     "react-slick": "^0.30.2",
     "react-window": "^1.8.10",
     "slick-carousel": "^1.8.1",
+    "sonner": "^1.7.1",
     "terser": "^5.30.0",
     "viem": "^2.9.8",
     "wagmi": "^2.5.18",

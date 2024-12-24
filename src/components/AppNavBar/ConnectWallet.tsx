@@ -35,13 +35,19 @@ const ConnectWallet: React.FC = () => {
   };
 
   useEffect(() => {
+    document.addEventListener("logout", () => {
+      disconnect();
+      setToken(null);
+    });
+  }, []);
+
+  useEffect(() => {
     if (address) {
       const domain = window.location.hostname;
       const nonce = Math.floor(Math.random() * 1e8);
       const timestamp = Date.now();
       const issuedAt = new Date(timestamp).toISOString();
       const message = `${domain} wants you to sign in with your Ethereum account:\n${address}\n\nWelcome to SubLayer\n\nURI: https://${domain}\nVersion: 1\nChain ID: 46\nNonce: ${nonce}\nIssued At: ${issuedAt}`;
-      console.log({ message });
       signMessageAsync({
         account: address,
         message,
@@ -51,7 +57,7 @@ const ConnectWallet: React.FC = () => {
             userAddress: address,
             signature,
             timestamp,
-            nonce
+            nonce,
           });
           setToken(loginResp.token);
         } catch (error) {
@@ -164,7 +170,7 @@ const ConnectWallet: React.FC = () => {
       <IconButton
         color="primary"
         size="small"
-        sx={{ mr: [-2, -1] }}
+        sx={{ mr: [ -1] }}
         onClick={() => {
           open({ view: "Connect" });
         }}

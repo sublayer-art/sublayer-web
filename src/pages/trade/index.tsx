@@ -6,7 +6,7 @@ import Banner from "./Banner";
 
 export default function Trade() {
   return (
-    <Box height="100%" className="scroll">
+    <Box height="100%" className="scroll hide-scrollbar">
       <Banner />
       <Container>
         <TradeTable />

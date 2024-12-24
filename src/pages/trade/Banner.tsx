@@ -15,8 +15,7 @@ import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
 
-const items = ["/banner-1.png", "/banner-2.png"];
-const items2 = [
+const items = [
   {
     title: `ASSASSINS SERIES
 CHINESE ZODIAC`,
@@ -128,7 +127,7 @@ const Banner: React.FC = () => {
           );
         }}
       >
-        {items2.map((item, index) => (
+        {items.map((item, index) => (
           <Item data={item} key={index} />
         ))}
       </Slider>
