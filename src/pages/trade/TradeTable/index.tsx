@@ -35,7 +35,7 @@ const TradeTable: React.FC = () => {
     <TableContainer>
       <Table
         sx={{
-          minWidth: 650,
+          minWidth: ["unset", 650],
           mx: "auto",
 
           ".MuiTableCell-root": {
@@ -49,53 +49,132 @@ const TradeTable: React.FC = () => {
         }}
       >
         <TableHead>
-          <TableRow>
-            <TableCell sx={{ width: 80 }}>
+          <TableRow sx={{ display: ["flex", "table-row"], width: "100vw" }}>
+            <TableCell sx={{ width: 40, display: ["none", "table-cell"] }}>
               <StarRounded />
             </TableCell>
-            <TableCell sx={{ width: 40 }}>
+            <TableCell sx={{ width: 40, display: ["none", "table-cell"] }}>
               <LocalFireDepartmentIcon />
             </TableCell>
-            <TableCell sx={{ width: 220 }}>Collection</TableCell>
-            <TableCell align="center">Floor</TableCell>
-            <TableCell align="center">Listed</TableCell>
-            <TableCell align="center">Total</TableCell>
-            <TableCell align="center"></TableCell>
+            <TableCell sx={{ flex: 1 }}>Collection</TableCell>
+            <TableCell
+              width={180}
+              sx={{ display: ["none", "table-cell"] }}
+            >
+              Floor
+            </TableCell>
+            <TableCell
+              align="center"
+              width={120}
+              sx={{ display: ["none", "table-cell"] }}
+            >
+              Listed
+            </TableCell>
+            <TableCell
+              align="center"
+              width={120}
+              sx={{ display: ["none", "table-cell"] }}
+            >
+              Total
+            </TableCell>
+            <TableCell sx={{ display: ["table-cell", "none"], width: "120px" }}>
+              Volume
+            </TableCell>
+            <TableCell
+              align="center"
+              width={120}
+              sx={{ display: ["none", "table-cell"] }}
+            ></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {records.map((row, index) => {
             return (
-              <TableRow hover key={index} onClick={() => handleToTrade(row)}>
-                <TableCell>
+              <TableRow
+                hover
+                key={index}
+                onClick={() => handleToTrade(row)}
+                sx={{
+                  display: ["flex", "table-row"],
+                  width: "100vw",
+                  overflow: "hidden",
+                }}
+              >
+                <TableCell sx={{ display: ["none", "table-cell"] }}>
                   <Stack direction="row">
                     <StarOutlineRoundedIcon name="star" />
                     {/* <Typography ml={0.5}>0</Typography> */}
                   </Stack>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ display: ["none", "table-cell"] }}>
                   {index < 3 && (
                     <LocalFireDepartmentIcon sx={{ color: "primary.main" }} />
                   )}
                 </TableCell>
-                <TableCell>
-                  <Stack direction="row" alignItems="center">
+                <TableCell sx={{ flex: 1 }}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    overflow="hidden"
+                    width="100%"
+                  >
                     <img
                       src={row.cover!}
                       alt="name"
                       style={{ width: 60, height: 60, objectFit: "contain" }}
                     />
-                    <Typography ml={2}>{row.name}</Typography>
+                    <Stack ml={2} width={0} flex={1}>
+                      <Typography
+                        fontSize={["0.875rem", "1rem"]}
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                      >
+                        {row.name}
+                      </Typography>
+                      <Typography color="primary.main" fontSize="0.75rem">
+                        Floor:
+                        {row.price ? `${wei2Eth(BigInt(row.price))} RING` : "-"}
+                      </Typography>
+                    </Stack>
                   </Stack>
                 </TableCell>
-                <TableCell align="center">
+                <TableCell
+                  sx={{ display: ["none", "table-cell"] }}
+                >
                   <Typography color="primary.main">
                     {row.price ? `${wei2Eth(BigInt(row.price))} RING` : "-"}
                   </Typography>
                 </TableCell>
-                <TableCell align="center">{row.saleCount}</TableCell>
-                <TableCell align="center">{row.collectionCount}</TableCell>
-                <TableCell align="center">
+                <TableCell
+                  align="center"
+                  sx={{ display: ["none", "table-cell"] }}
+                >
+                  {row.saleCount}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ display: ["none", "table-cell"] }}
+                >
+                  {row.collectionCount}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    flexShrink: 0,
+                    display: ["table-row", "none"],
+                    width: "120px",
+                  }}
+                >
+                  <Stack justifyContent="space-around" alignItems="start"  py={1} height="100%">
+                    <Typography fontSize="0.75rem">Listed:{row.saleCount}</Typography>
+                    <Typography fontSize="0.75rem">Total:{row.collectionCount}</Typography>
+                  </Stack>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ display: ["none", "table-cell"] }}
+                >
                   <Button
                     variant="contained"
                     size="small"

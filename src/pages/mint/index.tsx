@@ -6,7 +6,7 @@ export default function mint() {
   return (
     <Box height="100%" className="scroll">
       <Banner />
-      <Container>
+      <Container sx={{ px: 0 }}>
         <MintTable />
       </Container>
     </Box>

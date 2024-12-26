@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Filter from "./components/Filter";
+import React, { useEffect } from "react";
 
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Collections from "./components/Collections";
-import { Box, Button, Divider, Hidden, Paper, Stack } from "@mui/material";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import Spacer from "@/components/Spacer";
+import { Box, Divider, Hidden, Stack } from "@mui/material";
 import ProfileInfo from "./components/ProfileInfo";
 import ListedCollections from "./components/Listed";
 import CreatedCollections from "./components/Created";
@@ -19,19 +16,18 @@ import { useAccount } from "wagmi";
 
 export default function Profile() {
   const [value, setValue] = React.useState("1");
-  const [showPanel, setShowPanel] = useState(false);
   const collectionReq = useRequest(UserService.collectionList, {
     manual: true,
-    pollingInterval: 5000
+    pollingInterval: 5000,
   });
   const listedReq = useRequest(UserService.onSales, {
     manual: true,
-    pollingInterval: 5000
+    pollingInterval: 5000,
   });
   const createdReq = useRequest(UserService.createdList, {
     manual: true,
   });
-  
+
   const { address } = useAccount();
   useEffect(() => {
     if (address) {
@@ -47,8 +43,6 @@ export default function Profile() {
         <Hidden mdDown>
           <Box width={360} flexShrink={0}>
             <ProfileInfo />
-            <Divider />
-            <Filter />
           </Box>
         </Hidden>
         <Divider orientation="vertical" />
@@ -82,7 +76,6 @@ export default function Profile() {
                 sx={{ px: 2 }}
               >
                 <Tab label="My NFTs" value="1" disableRipple />
-
                 <Tab label="Listed" value="2" disableRipple />
                 <Tab label="Created" value="3" disableRipple />
               </TabList>
@@ -100,48 +93,6 @@ export default function Profile() {
               </Box>
             </TabContext>
           </Stack>
-          <Hidden mdUp>
-            <Paper
-              sx={{
-                height: 420,
-                position: "fixed",
-                bottom: 0,
-                width: "100%",
-                transition: "transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
-                transform: `translateY(${showPanel ? "0" : "348"}px)`,
-              }}
-            >
-              <Box p={2}>
-                <Stack direction="row" alignItems="center">
-                  <Spacer />
-                  <Button
-                    variant="contained"
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 24,
-                      height: 24,
-                      minWidth: "unset",
-                      padding: 0,
-                      borderRadius: "3px",
-                    }}
-                    onClick={() => setShowPanel((v) => !v)}
-                  >
-                    <ArrowDropUpIcon
-                      sx={{
-                        transform: `rotateX(${showPanel ? "180" : "0"}deg)`,
-                      }}
-                    />
-                  </Button>
-                </Stack>
-              </Box>
-              <Divider />
-              <Box flex={1} className="scroll">
-                <Filter />
-              </Box>
-            </Paper>
-          </Hidden>
         </Box>
       </Stack>
     </ProfileContext.Provider>

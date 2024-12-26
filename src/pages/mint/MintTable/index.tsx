@@ -30,7 +30,7 @@ const MintTable: React.FC = () => {
     <TableContainer>
       <Table
         sx={{
-          minWidth: 650,
+          minWidth: ["unset", 650],
           mx: "auto",
 
           ".MuiTableCell-root": {
@@ -45,8 +45,8 @@ const MintTable: React.FC = () => {
       >
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 220 }}>Collection</TableCell>
-            <TableCell align="center">Deploy Time</TableCell>
+            <TableCell>Collection</TableCell>
+            <TableCell align="center" width="200px">Deploy Time</TableCell>
             <TableCell align="center">Minted</TableCell>
             <TableCell align="center">Price</TableCell>
             <TableCell align="center"></TableCell>

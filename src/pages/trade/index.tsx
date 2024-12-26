@@ -8,7 +8,7 @@ export default function Trade() {
   return (
     <Box height="100%" className="scroll hide-scrollbar">
       <Banner />
-      <Container>
+      <Container sx={{px:0}}>
         <TradeTable />
       </Container>
     </Box>

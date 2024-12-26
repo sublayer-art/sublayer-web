@@ -160,7 +160,16 @@ const CollectionItem: React.FC<{
               }}
             />
           )}
-          <Typography variant="body1" ml={0.5} sx={{ fontSize: "0.9rem" }}>
+          <Typography
+            variant="body1"
+            ml={0.5}
+            sx={{
+              fontSize: "0.9rem",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {metadata.name}
           </Typography>
           <Typography variant="body1" ml="auto" sx={{ fontSize: "0.9rem" }}>

@@ -200,7 +200,15 @@ const CollectionItem: React.FC<{
         <Stack direction="row" alignItems="center" mt="auto">
           <Typography
             variant="body1"
-            sx={{ flex: 1, fontSize: "1.25rem", fontWeight: "bold" }}
+            sx={{
+              flex: 1,
+              fontSize: ["0.875rem", "1rem", "1.25rem"],
+              fontWeight: "bold",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              mr:1
+            }}
           >
             {metadata.name}
           </Typography>
