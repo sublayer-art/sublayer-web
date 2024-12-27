@@ -44,7 +44,7 @@ const TradeTable: React.FC = () => {
           },
           "th.MuiTableCell-root": {
             fontWeight: 700,
-            fontSize: "1.125rem",
+            fontSize: ["1rem", "1.125rem"],
           },
         }}
       >
@@ -132,7 +132,7 @@ const TradeTable: React.FC = () => {
                       >
                         {row.name}
                       </Typography>
-                      <Typography color="primary.main" fontSize="0.75rem">
+                      <Typography color="primary.main" fontSize="0.75rem"  sx={{ display: ["block", "none"] }}>
                         Floor:
                         {row.price ? `${wei2Eth(BigInt(row.price))} RING` : "-"}
                       </Typography>
