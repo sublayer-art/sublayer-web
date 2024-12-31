@@ -14,6 +14,7 @@ export type ResultProps = {
   icon?: React.ReactNode;
   extra?: React.ReactNode;
   type?: ResultType;
+  maxWidth?: number;
 };
 
 const icons: Record<ResultType, React.ReactNode> = {
@@ -31,14 +32,14 @@ const titles: Record<ResultType, string> = {
 };
 
 const Result: React.FC<ResultProps> = (props) => {
-  const { icon, title, subtitle, extra, type = "success" } = props;
+  const { icon, title, subtitle, extra, type = "success", maxWidth = 200 } = props;
 
   const finalIcon = icon || icons[type];
   const finalTitle = title || titles[type];
 
   return (
     <Center sx={{ py: 6 }}>
-      <Stack alignItems="center" width="100%" maxWidth="200px">
+      <Stack alignItems="center" width="100%" maxWidth={maxWidth}>
         <Center
           sx={{
             width: 80,
@@ -54,12 +55,13 @@ const Result: React.FC<ResultProps> = (props) => {
           <Typography
             mt={0.5}
             variant="caption"
+            textAlign="center"
             color="rgba(255, 255, 255, 0.75)"
           >
             {subtitle}
           </Typography>
         )}
-        {extra && <Box mt={1.5}>{extra}</Box>}
+        {extra && <Box mt={1.5} width="100%">{extra}</Box>}
       </Stack>
     </Center>
   );
