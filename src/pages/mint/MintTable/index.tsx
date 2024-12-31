@@ -187,6 +187,7 @@ const MintTable: React.FC = () => {
                       setCurrentContract(data);
                       setOpen(true);
                     }}
+                    disabled={minted >= supply}
                   >
                     Mint
                   </LoadingButton>
@@ -265,6 +266,11 @@ const MintDialog = (props: MintDialogProps) => {
           onSuccess() {
             onClose();
             toast.success("mint successful!");
+          },
+          onError(error) {
+            const errMsg = (error as any).shortMessage || error.message || "mint failed!"
+            
+            toast.error(errMsg);
           },
         }
       );

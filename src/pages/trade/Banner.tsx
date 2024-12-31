@@ -20,13 +20,13 @@ const items = [
     title: `ASSASSINS SERIES
 CHINESE ZODIAC`,
     subtitle: `Buy the first issue of SubLayer’s assassins series Zodiac Animals.`,
-    src: "/banner-1.png",
+    src: "/banner-2.png",
   },
   {
     title: `MECH SERIES
 RAIDER`,
     subtitle: `Buy the first issue of SubLayer’s Mech series RAIDER.`,
-    src: "/banner-2.png",
+    src: "/banner-1.png",
   },
 ];
 const Banner: React.FC = () => {
